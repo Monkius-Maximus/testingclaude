@@ -1,0 +1,205 @@
+[gd_scene load_steps=2 format=3 uid="uid://settings001cde"]
+
+[ext_resource type="Script" path="res://scripts/ui/SettingsUI.cs" id="1_settingscs"]
+
+[node name="Settings" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource("1_settingscs")
+_resolutionOption = NodePath("VBox/Tabs/Video/RowRes/ResOption")
+_windowModeOption = NodePath("VBox/Tabs/Video/RowWindow/WinOption")
+_vsyncCheck = NodePath("VBox/Tabs/Video/RowVsync/VsyncCheck")
+_qualityOption = NodePath("VBox/Tabs/Video/RowQuality/QualOption")
+_masterSlider = NodePath("VBox/Tabs/Audio/RowMaster/MasterSlider")
+_musicSlider = NodePath("VBox/Tabs/Audio/RowMusic/MusicSlider")
+_sfxSlider = NodePath("VBox/Tabs/Audio/RowSfx/SfxSlider")
+_lblMaster = NodePath("VBox/Tabs/Audio/RowMaster/LblMaster")
+_lblMusic = NodePath("VBox/Tabs/Audio/RowMusic/LblMusic")
+_lblSfx = NodePath("VBox/Tabs/Audio/RowSfx/LblSfx")
+_controlsContainer = NodePath("VBox/Tabs/Controls/ScrollControls/ControlsList")
+_btnResetControls = NodePath("VBox/Tabs/Controls/BtnResetControls")
+_btnSave = NodePath("VBox/Buttons/BtnSave")
+_btnBack = NodePath("VBox/Buttons/BtnBack")
+
+[node name="Background" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color(0.08, 0.12, 0.2, 1)
+
+[node name="VBox" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 60.0
+offset_top = 30.0
+offset_right = -60.0
+offset_bottom = -30.0
+theme_override_constants/separation = 16
+
+[node name="LblTitle" type="Label" parent="VBox"]
+layout_mode = 2
+text = "Configurações"
+horizontal_alignment = 1
+theme_override_font_sizes/font_size = 32
+
+[node name="Tabs" type="TabContainer" parent="VBox"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Video" type="VBoxContainer" parent="VBox/Tabs"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="RowRes" type="HBoxContainer" parent="VBox/Tabs/Video"]
+layout_mode = 2
+
+[node name="LblRes" type="Label" parent="VBox/Tabs/Video/RowRes"]
+layout_mode = 2
+custom_minimum_size = Vector2(180, 0)
+text = "Resolução:"
+vertical_alignment = 1
+
+[node name="ResOption" type="OptionButton" parent="VBox/Tabs/Video/RowRes"]
+layout_mode = 2
+custom_minimum_size = Vector2(200, 38)
+
+[node name="RowWindow" type="HBoxContainer" parent="VBox/Tabs/Video"]
+layout_mode = 2
+
+[node name="LblWindow" type="Label" parent="VBox/Tabs/Video/RowWindow"]
+layout_mode = 2
+custom_minimum_size = Vector2(180, 0)
+text = "Modo Janela:"
+vertical_alignment = 1
+
+[node name="WinOption" type="OptionButton" parent="VBox/Tabs/Video/RowWindow"]
+layout_mode = 2
+custom_minimum_size = Vector2(200, 38)
+
+[node name="RowVsync" type="HBoxContainer" parent="VBox/Tabs/Video"]
+layout_mode = 2
+
+[node name="LblVsync" type="Label" parent="VBox/Tabs/Video/RowVsync"]
+layout_mode = 2
+custom_minimum_size = Vector2(180, 0)
+text = "V-Sync:"
+vertical_alignment = 1
+
+[node name="VsyncCheck" type="CheckButton" parent="VBox/Tabs/Video/RowVsync"]
+layout_mode = 2
+
+[node name="RowQuality" type="HBoxContainer" parent="VBox/Tabs/Video"]
+layout_mode = 2
+
+[node name="LblQuality" type="Label" parent="VBox/Tabs/Video/RowQuality"]
+layout_mode = 2
+custom_minimum_size = Vector2(180, 0)
+text = "Qualidade Gráfica:"
+vertical_alignment = 1
+
+[node name="QualOption" type="OptionButton" parent="VBox/Tabs/Video/RowQuality"]
+layout_mode = 2
+custom_minimum_size = Vector2(200, 38)
+
+[node name="Audio" type="VBoxContainer" parent="VBox/Tabs"]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="RowMaster" type="HBoxContainer" parent="VBox/Tabs/Audio"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="LblMasterTitle" type="Label" parent="VBox/Tabs/Audio/RowMaster"]
+layout_mode = 2
+custom_minimum_size = Vector2(160, 0)
+text = "Master:"
+vertical_alignment = 1
+
+[node name="MasterSlider" type="HSlider" parent="VBox/Tabs/Audio/RowMaster"]
+layout_mode = 2
+size_flags_horizontal = 3
+custom_minimum_size = Vector2(200, 0)
+
+[node name="LblMaster" type="Label" parent="VBox/Tabs/Audio/RowMaster"]
+layout_mode = 2
+custom_minimum_size = Vector2(50, 0)
+text = "100%"
+
+[node name="RowMusic" type="HBoxContainer" parent="VBox/Tabs/Audio"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="LblMusicTitle" type="Label" parent="VBox/Tabs/Audio/RowMusic"]
+layout_mode = 2
+custom_minimum_size = Vector2(160, 0)
+text = "Música:"
+vertical_alignment = 1
+
+[node name="MusicSlider" type="HSlider" parent="VBox/Tabs/Audio/RowMusic"]
+layout_mode = 2
+size_flags_horizontal = 3
+custom_minimum_size = Vector2(200, 0)
+
+[node name="LblMusic" type="Label" parent="VBox/Tabs/Audio/RowMusic"]
+layout_mode = 2
+custom_minimum_size = Vector2(50, 0)
+text = "80%"
+
+[node name="RowSfx" type="HBoxContainer" parent="VBox/Tabs/Audio"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="LblSfxTitle" type="Label" parent="VBox/Tabs/Audio/RowSfx"]
+layout_mode = 2
+custom_minimum_size = Vector2(160, 0)
+text = "Efeitos Sonoros:"
+vertical_alignment = 1
+
+[node name="SfxSlider" type="HSlider" parent="VBox/Tabs/Audio/RowSfx"]
+layout_mode = 2
+size_flags_horizontal = 3
+custom_minimum_size = Vector2(200, 0)
+
+[node name="LblSfx" type="Label" parent="VBox/Tabs/Audio/RowSfx"]
+layout_mode = 2
+custom_minimum_size = Vector2(50, 0)
+text = "100%"
+
+[node name="Controls" type="VBoxContainer" parent="VBox/Tabs"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="ScrollControls" type="ScrollContainer" parent="VBox/Tabs/Controls"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="ControlsList" type="VBoxContainer" parent="VBox/Tabs/Controls/ScrollControls"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="BtnResetControls" type="Button" parent="VBox/Tabs/Controls"]
+layout_mode = 2
+custom_minimum_size = Vector2(220, 44)
+text = "Resetar para Padrão"
+
+[node name="Buttons" type="HBoxContainer" parent="VBox"]
+layout_mode = 2
+alignment = 1
+theme_override_constants/separation = 16
+
+[node name="BtnBack" type="Button" parent="VBox/Buttons"]
+layout_mode = 2
+custom_minimum_size = Vector2(160, 50)
+text = "Cancelar"
+theme_override_font_sizes/font_size = 20
+
+[node name="BtnSave" type="Button" parent="VBox/Buttons"]
+layout_mode = 2
+custom_minimum_size = Vector2(200, 50)
+text = "Salvar"
+theme_override_font_sizes/font_size = 20

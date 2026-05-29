@@ -22,6 +22,8 @@ public partial class MatchBootstrap : Node
     [Export] private NodePath _penaltyAreaAPath;
     [Export] private NodePath _penaltyAreaBPath;
 
+    private const string PauseMenuPath = "res://scenes/ui/PauseMenu.tscn";
+
     // Posições de kickoff para time 0 (ataca em +X). Time 1 é espelhado.
     private static readonly Vector3[] KickoffPositionsTeam0 = new Vector3[]
     {
@@ -57,7 +59,12 @@ public partial class MatchBootstrap : Node
         SetupCinematicDirector();
 
         var clock = GetNodeOrNull<MatchClock>("MatchClock");
-        clock?.Start();
+        if (clock != null)
+        {
+            clock.HalfTime  += OnHalfTime;
+            clock.FullTime  += OnFullTime;
+            clock.Start();
+        }
 
         var gm = GetNodeOrNull<GameManager>("/root/GameManager");
         if (gm != null)
@@ -65,6 +72,8 @@ public partial class MatchBootstrap : Node
             gm.HomeTeam = HomeTeamData;
             gm.AwayTeam = AwayTeamData;
         }
+
+        InstantiatePauseMenu();
     }
 
     // Carrega recursos padrão se não foram atribuídos no editor
@@ -165,6 +174,55 @@ public partial class MatchBootstrap : Node
         {
             tcB.Blackboard.OwnGoalPosition      = new Vector3( 52.5f, 0f, 0f);
             tcB.Blackboard.OpponentGoalPosition = new Vector3(-52.5f, 0f, 0f);
+        }
+    }
+
+    private void InstantiatePauseMenu()
+    {
+        var scene = GD.Load<PackedScene>(PauseMenuPath);
+        if (scene == null) return;
+        AddChild(scene.Instantiate());
+    }
+
+    private void OnHalfTime()
+    {
+        var gsm   = GetNodeOrNull<GameStateManager>("/root/GameStateManager");
+        var rules = GetNodeOrNull<RulesManager>("RulesManager");
+        var clock = GetNodeOrNull<MatchClock>("MatchClock");
+        var gm    = GetNodeOrNull<GameManager>("/root/GameManager");
+
+        if (gsm != null && rules != null)
+        {
+            var score = rules.Score;
+            gsm.CurrentMatchResult = new GameStateManager.MatchResult
+            {
+                ScoreHome    = score.Home,
+                ScoreAway    = score.Away,
+                MinutesPlayed = clock?.CurrentMinute ?? 45,
+                Mode          = gm?.CurrentMode ?? GameManager.MatchMode.Friendly
+            };
+            gsm.GoTo(GameStateManager.GameState.HalfTime);
+        }
+    }
+
+    private void OnFullTime()
+    {
+        var gsm   = GetNodeOrNull<GameStateManager>("/root/GameStateManager");
+        var rules = GetNodeOrNull<RulesManager>("RulesManager");
+        var clock = GetNodeOrNull<MatchClock>("MatchClock");
+        var gm    = GetNodeOrNull<GameManager>("/root/GameManager");
+
+        if (gsm != null && rules != null)
+        {
+            var score = rules.Score;
+            gsm.CurrentMatchResult = new GameStateManager.MatchResult
+            {
+                ScoreHome    = score.Home,
+                ScoreAway    = score.Away,
+                MinutesPlayed = clock?.CurrentMinute ?? 90,
+                Mode          = gm?.CurrentMode ?? GameManager.MatchMode.Friendly
+            };
+            gsm.GoTo(GameStateManager.GameState.Result);
         }
     }
 

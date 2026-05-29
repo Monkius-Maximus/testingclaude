@@ -1,0 +1,68 @@
+[gd_scene load_steps=2 format=3 uid="uid://mainmenu0001ab"]
+
+[ext_resource type="Script" path="res://scripts/ui/MainMenuUI.cs" id="1_mainmenucs"]
+
+[node name="MainMenu" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource("1_mainmenucs")
+_btnPlay = NodePath("Center/VBox/BtnPlay")
+_btnSettings = NodePath("Center/VBox/BtnSettings")
+_btnQuit = NodePath("Center/VBox/BtnQuit")
+_lblVersion = NodePath("LblVersion")
+
+[node name="Background" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color(0.08, 0.12, 0.2, 1)
+
+[node name="Center" type="CenterContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="VBox" type="VBoxContainer" parent="Center"]
+layout_mode = 2
+custom_minimum_size = Vector2(300, 0)
+theme_override_constants/separation = 16
+
+[node name="LblTitle" type="Label" parent="Center/VBox"]
+layout_mode = 2
+text = "FOOTBALL GAME"
+horizontal_alignment = 1
+theme_override_font_sizes/font_size = 48
+
+[node name="BtnPlay" type="Button" parent="Center/VBox"]
+layout_mode = 2
+custom_minimum_size = Vector2(300, 52)
+text = "Jogar"
+theme_override_font_sizes/font_size = 22
+
+[node name="BtnSettings" type="Button" parent="Center/VBox"]
+layout_mode = 2
+custom_minimum_size = Vector2(300, 52)
+text = "Configurações"
+theme_override_font_sizes/font_size = 22
+
+[node name="BtnQuit" type="Button" parent="Center/VBox"]
+layout_mode = 2
+custom_minimum_size = Vector2(300, 52)
+text = "Sair"
+theme_override_font_sizes/font_size = 22
+
+[node name="LblVersion" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -120.0
+offset_top = -30.0
+text = "v0.1.0-dev"
+horizontal_alignment = 2

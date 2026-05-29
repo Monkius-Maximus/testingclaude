@@ -1,0 +1,135 @@
+[gd_scene load_steps=2 format=3 uid="uid://teamselect001bc"]
+
+[ext_resource type="Script" path="res://scripts/ui/TeamSelectUI.cs" id="1_teamselectcs"]
+
+[node name="TeamSelect" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource("1_teamselectcs")
+_modeOption = NodePath("VBox/RowMode/ModeOption")
+_homeTeamOption = NodePath("VBox/TeamsRow/HomeBox/HomeTeamOption")
+_awayTeamOption = NodePath("VBox/TeamsRow/AwayBox/AwayTeamOption")
+_formationOption = NodePath("VBox/RowFormation/FormationOption")
+_btnPlay = NodePath("VBox/Buttons/BtnPlay")
+_btnBack = NodePath("VBox/Buttons/BtnBack")
+_lblHomeRating = NodePath("VBox/TeamsRow/HomeBox/LblHomeRating")
+_lblAwayRating = NodePath("VBox/TeamsRow/AwayBox/LblAwayRating")
+
+[node name="Background" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color(0.08, 0.12, 0.2, 1)
+
+[node name="VBox" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 80.0
+offset_top = 40.0
+offset_right = -80.0
+offset_bottom = -40.0
+theme_override_constants/separation = 20
+
+[node name="LblTitle" type="Label" parent="VBox"]
+layout_mode = 2
+text = "Seleção de Partida"
+horizontal_alignment = 1
+theme_override_font_sizes/font_size = 36
+
+[node name="RowMode" type="HBoxContainer" parent="VBox"]
+layout_mode = 2
+
+[node name="LblMode" type="Label" parent="VBox/RowMode"]
+layout_mode = 2
+custom_minimum_size = Vector2(160, 0)
+text = "Modo:"
+vertical_alignment = 1
+theme_override_font_sizes/font_size = 18
+
+[node name="ModeOption" type="OptionButton" parent="VBox/RowMode"]
+layout_mode = 2
+custom_minimum_size = Vector2(220, 40)
+theme_override_font_sizes/font_size = 18
+
+[node name="TeamsRow" type="HBoxContainer" parent="VBox"]
+layout_mode = 2
+theme_override_constants/separation = 40
+
+[node name="HomeBox" type="VBoxContainer" parent="VBox/TeamsRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="LblHome" type="Label" parent="VBox/TeamsRow/HomeBox"]
+layout_mode = 2
+text = "Time da Casa"
+horizontal_alignment = 1
+theme_override_font_sizes/font_size = 20
+
+[node name="HomeTeamOption" type="OptionButton" parent="VBox/TeamsRow/HomeBox"]
+layout_mode = 2
+custom_minimum_size = Vector2(0, 40)
+theme_override_font_sizes/font_size = 18
+
+[node name="LblHomeRating" type="Label" parent="VBox/TeamsRow/HomeBox"]
+layout_mode = 2
+text = "OVR –"
+horizontal_alignment = 1
+theme_override_font_sizes/font_size = 16
+
+[node name="AwayBox" type="VBoxContainer" parent="VBox/TeamsRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="LblAway" type="Label" parent="VBox/TeamsRow/AwayBox"]
+layout_mode = 2
+text = "Visitante"
+horizontal_alignment = 1
+theme_override_font_sizes/font_size = 20
+
+[node name="AwayTeamOption" type="OptionButton" parent="VBox/TeamsRow/AwayBox"]
+layout_mode = 2
+custom_minimum_size = Vector2(0, 40)
+theme_override_font_sizes/font_size = 18
+
+[node name="LblAwayRating" type="Label" parent="VBox/TeamsRow/AwayBox"]
+layout_mode = 2
+text = "OVR –"
+horizontal_alignment = 1
+theme_override_font_sizes/font_size = 16
+
+[node name="RowFormation" type="HBoxContainer" parent="VBox"]
+layout_mode = 2
+
+[node name="LblFormation" type="Label" parent="VBox/RowFormation"]
+layout_mode = 2
+custom_minimum_size = Vector2(160, 0)
+text = "Formação:"
+vertical_alignment = 1
+theme_override_font_sizes/font_size = 18
+
+[node name="FormationOption" type="OptionButton" parent="VBox/RowFormation"]
+layout_mode = 2
+custom_minimum_size = Vector2(220, 40)
+theme_override_font_sizes/font_size = 18
+
+[node name="Buttons" type="HBoxContainer" parent="VBox"]
+layout_mode = 2
+alignment = 1
+theme_override_constants/separation = 20
+
+[node name="BtnBack" type="Button" parent="VBox/Buttons"]
+layout_mode = 2
+custom_minimum_size = Vector2(160, 50)
+text = "Voltar"
+theme_override_font_sizes/font_size = 20
+
+[node name="BtnPlay" type="Button" parent="VBox/Buttons"]
+layout_mode = 2
+custom_minimum_size = Vector2(200, 50)
+text = "Jogar"
+theme_override_font_sizes/font_size = 20

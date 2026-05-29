@@ -19,6 +19,9 @@ public partial class RulesManager : Node
     private Ball _ball;
     private readonly int[] _score = { 0, 0 };
 
+    /// <summary>Placar atual. Índice 0 = time da casa, 1 = visitante.</summary>
+    public (int Home, int Away) Score => (_score[0], _score[1]);
+
     // Posições de reposição (em metros). Ajustar ao campo real.
     private static readonly Dictionary<string, Vector3> CornerPositions = new()
     {

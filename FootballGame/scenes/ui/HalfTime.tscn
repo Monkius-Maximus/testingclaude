@@ -1,0 +1,55 @@
+[gd_scene load_steps=2 format=3 uid="uid://halftime001gh"]
+
+[ext_resource type="Script" path="res://scripts/ui/HalfTimeUI.cs" id="1_halftimecs"]
+
+[node name="HalfTime" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource("1_halftimecs")
+_lblScore = NodePath("Center/VBox/LblScore")
+_lblInfo = NodePath("Center/VBox/LblInfo")
+_btnContinue = NodePath("Center/VBox/BtnContinue")
+
+[node name="Background" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color(0.05, 0.1, 0.18, 1)
+
+[node name="Center" type="CenterContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="VBox" type="VBoxContainer" parent="Center"]
+layout_mode = 2
+custom_minimum_size = Vector2(400, 0)
+theme_override_constants/separation = 24
+
+[node name="LblHalf" type="Label" parent="Center/VBox"]
+layout_mode = 2
+text = "INTERVALO"
+horizontal_alignment = 1
+theme_override_font_sizes/font_size = 40
+
+[node name="LblScore" type="Label" parent="Center/VBox"]
+layout_mode = 2
+text = "0  –  0"
+horizontal_alignment = 1
+theme_override_font_sizes/font_size = 64
+
+[node name="LblInfo" type="Label" parent="Center/VBox"]
+layout_mode = 2
+text = "Intervalo — 2° Tempo a seguir"
+horizontal_alignment = 1
+theme_override_font_sizes/font_size = 18
+
+[node name="BtnContinue" type="Button" parent="Center/VBox"]
+layout_mode = 2
+custom_minimum_size = Vector2(260, 56)
+text = "Continuar para o 2° Tempo"
+theme_override_font_sizes/font_size = 20
