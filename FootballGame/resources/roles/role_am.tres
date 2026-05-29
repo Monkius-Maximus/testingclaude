@@ -1,0 +1,11 @@
+[gd_resource type="PlayerRole" load_steps=1 format=3 uid="uid://am00000000001"]
+
+[resource]
+Type = 5
+DisplayName = "Meia Atacante"
+BasePosition = Vector2(0, 0.12)
+ActionRadius = 16.0
+DefensiveBias = 0.22
+Aggressiveness = 0.8
+StaminaUsage = 0.82
+CanUseHands = false

@@ -77,21 +77,26 @@ public partial class MatchBootstrap : Node
         InstantiatePauseMenu();
     }
 
-    // Carrega recursos padrão se não foram atribuídos no editor
+    // Carrega recursos padrão se não foram atribuídos no editor.
+    // GameManager tem prioridade (vem da tela de seleção de times).
     private void LoadDefaultResources()
     {
+        var gm = GetNodeOrNull<GameManager>("/root/GameManager");
+
         if (PlayerScene == null)
             PlayerScene = GD.Load<PackedScene>("res://scenes/entities/Player.tscn");
         if (GoalkeeperScene == null)
             GoalkeeperScene = GD.Load<PackedScene>("res://scenes/entities/Goalkeeper.tscn");
-        if (HomeLineup == null)
-            HomeLineup = GD.Load<Lineup>("res://resources/lineups/lineup_433_home.tres");
-        if (AwayLineup == null)
-            AwayLineup = GD.Load<Lineup>("res://resources/lineups/lineup_433_away.tres");
+
         if (HomeTeamData == null)
-            HomeTeamData = GD.Load<TeamData>("res://resources/leagues/team_home.tres");
+            HomeTeamData = gm?.HomeTeam ?? GD.Load<TeamData>("res://resources/leagues/team_home.tres");
         if (AwayTeamData == null)
-            AwayTeamData = GD.Load<TeamData>("res://resources/leagues/team_away.tres");
+            AwayTeamData = gm?.AwayTeam ?? GD.Load<TeamData>("res://resources/leagues/team_away.tres");
+
+        if (HomeLineup == null)
+            HomeLineup = gm?.HomeLineup ?? GD.Load<Lineup>("res://resources/lineups/lineup_433_home.tres");
+        if (AwayLineup == null)
+            AwayLineup = gm?.AwayLineup ?? GD.Load<Lineup>("res://resources/lineups/lineup_433_away.tres");
     }
 
     private void WireHumanInput()

@@ -101,20 +101,109 @@ public partial class AIBrain : Node
     private BTStatus AttackOrPass(AIBrain b, float dt)
     {
         var goal = b.Blackboard.OpponentGoalPosition;
-        float dist = b.Player.GlobalPosition.DistanceTo(goal);
+        float distToGoal = b.Player.GlobalPosition.DistanceTo(goal);
 
-        if (dist < 25f)
+        // Dentro da faixa de chute → atirar
+        if (distToGoal < 22f)
         {
             b.Player.LookTarget        = goal;
             b.Player.IntendsToKick     = true;
-            b.Player.IntendedKickPower = 1.0f;
+            b.Player.IntendedKickPower = Mathf.Clamp(1.2f - distToGoal / 35f, 0.5f, 1f);
+            return BTStatus.Success;
         }
-        else
+
+        // Procura o melhor companheiro para passar
+        var passTarget = FindBestPassTarget(b);
+        if (passTarget != null)
         {
-            b.Player.IntendedMovement = (goal - b.Player.GlobalPosition).Normalized();
-            b.Player.IntendsToSprint  = true;
+            b.Player.LookTarget        = passTarget.GlobalPosition + Vector3.Up * 0.3f;
+            b.Player.IntendsToKick     = true;
+            b.Player.IntendedKickPower = CalculatePassPower(b.Player.GlobalPosition,
+                                                             passTarget.GlobalPosition);
+            return BTStatus.Success;
         }
+
+        // Sem passe disponível: avança com a bola
+        b.Player.IntendedMovement = (goal - b.Player.GlobalPosition).Normalized();
+        b.Player.IntendsToSprint  = distToGoal < 40f;
         return BTStatus.Success;
+    }
+
+    private Player FindBestPassTarget(AIBrain b)
+    {
+        var myPos    = b.Player.GlobalPosition;
+        var goal     = b.Blackboard.OpponentGoalPosition;
+        float myDist = myPos.DistanceTo(goal);
+
+        Player best      = null;
+        float  bestScore = -1f;
+
+        foreach (var node in b.Player.GetTree().GetNodesInGroup("players"))
+        {
+            if (node is not Player mate)    continue;
+            if (mate == b.Player)           continue;
+            if (mate.Team != b.Player.Team) continue;
+
+            float mateDist = mate.GlobalPosition.DistanceTo(goal);
+
+            // Companheiro deve estar em posição mais avançada
+            if (mateDist >= myDist - 4f) continue;
+
+            // Adversário não pode estar muito próximo do alvo
+            float pressure = NearestOpponentDist(b, mate.GlobalPosition);
+            if (pressure < 2.5f) continue;
+
+            // Linha de passe não pode estar bloqueada
+            if (IsPassLaneBlocked(b, myPos, mate.GlobalPosition)) continue;
+
+            float score = (myDist - mateDist) * 0.6f + pressure * 0.4f;
+            if (score > bestScore)
+            {
+                bestScore = score;
+                best      = mate;
+            }
+        }
+        return best;
+    }
+
+    private float NearestOpponentDist(AIBrain b, Vector3 pos)
+    {
+        float min = float.MaxValue;
+        foreach (var node in b.Player.GetTree().GetNodesInGroup("players"))
+            if (node is Player opp && opp.Team != b.Player.Team)
+            {
+                float d = opp.GlobalPosition.DistanceTo(pos);
+                if (d < min) min = d;
+            }
+        return min;
+    }
+
+    private bool IsPassLaneBlocked(AIBrain b, Vector3 from, Vector3 to)
+    {
+        var   dir  = (to - from);
+        float dist = dir.Length();
+        if (dist < 0.01f) return false;
+        var dirN = dir.Normalized();
+
+        foreach (var node in b.Player.GetTree().GetNodesInGroup("players"))
+        {
+            if (node is not Player opp) continue;
+            if (opp.Team == b.Player.Team) continue;
+
+            var   toOpp = opp.GlobalPosition - from;
+            float proj  = dirN.Dot(toOpp);
+            if (proj < 0f || proj > dist) continue;
+
+            var closest = from + dirN * proj;
+            if (closest.DistanceTo(opp.GlobalPosition) < 2.5f) return true;
+        }
+        return false;
+    }
+
+    private static float CalculatePassPower(Vector3 from, Vector3 to)
+    {
+        float dist = from.DistanceTo(to);
+        return Mathf.Clamp(dist / 28f, 0.2f, 0.65f);
     }
 
     private BTStatus SupportAttack(AIBrain b, float dt)

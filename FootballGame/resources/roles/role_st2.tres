@@ -1,0 +1,11 @@
+[gd_resource type="PlayerRole" load_steps=1 format=3 uid="uid://st20000000001"]
+
+[resource]
+Type = 7
+DisplayName = "Segundo Atacante"
+BasePosition = Vector2(0.18, 0.52)
+ActionRadius = 16.0
+DefensiveBias = 0.15
+Aggressiveness = 0.85
+StaminaUsage = 0.8
+CanUseHands = false

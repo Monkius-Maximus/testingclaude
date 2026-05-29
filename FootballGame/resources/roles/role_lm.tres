@@ -1,0 +1,11 @@
+[gd_resource type="PlayerRole" load_steps=1 format=3 uid="uid://lm0000000001a"]
+
+[resource]
+Type = 6
+DisplayName = "Meia Esquerdo"
+BasePosition = Vector2(-0.62, -0.02)
+ActionRadius = 16.0
+DefensiveBias = 0.55
+Aggressiveness = 0.6
+StaminaUsage = 0.85
+CanUseHands = false

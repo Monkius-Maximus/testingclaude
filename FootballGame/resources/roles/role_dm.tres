@@ -1,0 +1,11 @@
+[gd_resource type="PlayerRole" load_steps=1 format=3 uid="uid://dm00000000001"]
+
+[resource]
+Type = 3
+DisplayName = "Volante"
+BasePosition = Vector2(0, -0.28)
+ActionRadius = 14.0
+DefensiveBias = 0.78
+Aggressiveness = 0.55
+StaminaUsage = 0.88
+CanUseHands = false

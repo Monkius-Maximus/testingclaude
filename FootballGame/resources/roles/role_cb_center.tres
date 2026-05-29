@@ -1,0 +1,11 @@
+[gd_resource type="PlayerRole" load_steps=1 format=3 uid="uid://cbcenter0001a"]
+
+[resource]
+Type = 1
+DisplayName = "Zagueiro Central"
+BasePosition = Vector2(0, -0.62)
+ActionRadius = 12.0
+DefensiveBias = 0.92
+Aggressiveness = 0.48
+StaminaUsage = 0.55
+CanUseHands = false

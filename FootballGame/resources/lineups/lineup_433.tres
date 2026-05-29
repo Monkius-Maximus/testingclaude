@@ -1,0 +1,18 @@
+[gd_resource type="Lineup" load_steps=12 format=3 uid="uid://lineup433gen0"]
+
+[ext_resource type="Resource" path="res://resources/roles/role_gk.tres" id="1_gk"]
+[ext_resource type="Resource" path="res://resources/roles/role_lb.tres" id="2_lb"]
+[ext_resource type="Resource" path="res://resources/roles/role_cb_left.tres" id="3_cbl"]
+[ext_resource type="Resource" path="res://resources/roles/role_cb_right.tres" id="4_cbr"]
+[ext_resource type="Resource" path="res://resources/roles/role_rb.tres" id="5_rb"]
+[ext_resource type="Resource" path="res://resources/roles/role_cm_left.tres" id="6_cml"]
+[ext_resource type="Resource" path="res://resources/roles/role_cm_center.tres" id="7_cmc"]
+[ext_resource type="Resource" path="res://resources/roles/role_cm_right.tres" id="8_cmr"]
+[ext_resource type="Resource" path="res://resources/roles/role_lw.tres" id="9_lw"]
+[ext_resource type="Resource" path="res://resources/roles/role_rw.tres" id="10_rw"]
+[ext_resource type="Resource" path="res://resources/roles/role_st.tres" id="11_st"]
+
+[resource]
+Formation = 1
+Roles = Array[Resource]([ExtResource("1_gk"), ExtResource("2_lb"), ExtResource("3_cbl"), ExtResource("4_cbr"), ExtResource("5_rb"), ExtResource("6_cml"), ExtResource("7_cmc"), ExtResource("8_cmr"), ExtResource("9_lw"), ExtResource("10_rw"), ExtResource("11_st")])
+PlayerIds = Array[String]([])

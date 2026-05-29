@@ -18,13 +18,21 @@ public partial class TeamSelectUI : Control
     [Export] private Label        _lblHomeRating;
     [Export] private Label        _lblAwayRating;
 
-    private readonly List<TeamData> _teams     = new();
-    private readonly List<string>   _lineupPaths = new();
+    // Mapeamento FormationKind → path do lineup genérico (sem IDs fixos)
+    private static readonly string[] FormationLineupPaths = new[]
+    {
+        "res://resources/lineups/lineup_442.tres",   // F_4_4_2 = 0
+        "res://resources/lineups/lineup_433.tres",   // F_4_3_3 = 1
+        "res://resources/lineups/lineup_352.tres",   // F_3_5_2 = 2
+        "res://resources/lineups/lineup_4231.tres",  // F_4_2_3_1 = 3
+        "res://resources/lineups/lineup_532.tres",   // F_5_3_2 = 4
+    };
+
+    private readonly List<TeamData> _teams = new();
 
     public override void _Ready()
     {
         LoadTeams();
-        LoadFormations();
         PopulateUI();
 
         if (_btnPlay != null) _btnPlay.Pressed += OnPlayPressed;
@@ -72,28 +80,6 @@ public partial class TeamSelectUI : Control
     {
         var res = GD.Load<Resource>(path);
         if (res is TeamData td) _teams.Add(td);
-    }
-
-    private void LoadFormations()
-    {
-        using var dir = DirAccess.Open("res://resources/lineups/");
-        if (dir != null)
-        {
-            dir.ListDirBegin();
-            string name = dir.GetNext();
-            while (!string.IsNullOrEmpty(name))
-            {
-                if (name.EndsWith(".tres"))
-                    _lineupPaths.Add($"res://resources/lineups/{name}");
-                name = dir.GetNext();
-            }
-        }
-
-        if (_lineupPaths.Count == 0)
-        {
-            _lineupPaths.Add("res://resources/lineups/lineup_433_home.tres");
-            _lineupPaths.Add("res://resources/lineups/lineup_433_away.tres");
-        }
     }
 
     private void PopulateUI()
@@ -162,6 +148,11 @@ public partial class TeamSelectUI : Control
         gm.HomeTeam    = _teams[homeIdx];
         gm.AwayTeam    = _teams[awayIdx];
         gm.CurrentMode = (GameManager.MatchMode)modeIdx;
+
+        // Carrega o lineup correspondente à formação escolhida (ambos os times usam o mesmo esquema tático)
+        int formationIdx = Mathf.Clamp(_formationOption?.Selected ?? 1, 0, FormationLineupPaths.Length - 1);
+        gm.HomeLineup = GD.Load<Lineup>(FormationLineupPaths[formationIdx]);
+        gm.AwayLineup = gm.HomeLineup; // mesmo esquema tático; IDs são gerados automaticamente por time
 
         gsm.GoTo(GameStateManager.GameState.Match);
     }

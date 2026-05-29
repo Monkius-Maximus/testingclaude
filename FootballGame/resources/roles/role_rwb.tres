@@ -1,0 +1,11 @@
+[gd_resource type="PlayerRole" load_steps=1 format=3 uid="uid://rwb000000001d"]
+
+[resource]
+Type = 2
+DisplayName = "Ala Direito"
+BasePosition = Vector2(0.72, -0.12)
+ActionRadius = 18.0
+DefensiveBias = 0.6
+Aggressiveness = 0.7
+StaminaUsage = 0.95
+CanUseHands = false

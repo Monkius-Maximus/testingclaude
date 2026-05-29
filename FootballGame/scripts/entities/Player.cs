@@ -38,9 +38,13 @@ public partial class Player : CharacterBody3D
     protected float Gravity = ProjectSettings
         .GetSetting("physics/3d/default_gravity").AsSingle();
 
+    // Referência cacheada à bola para evitar busca por grupo a cada frame
+    private Ball _ball;
+
     public override void _Ready()
     {
         AddToGroup("players");
+        _ball = GetTree().GetFirstNodeInGroup("ball") as Ball;
     }
 
     public override void _PhysicsProcess(double delta)
@@ -48,6 +52,13 @@ public partial class Player : CharacterBody3D
         ApplyGravity((float)delta);
         ExecuteIntentions((float)delta);
         MoveAndSlide();
+        UpdateBallPossession();
+    }
+
+    private void UpdateBallPossession()
+    {
+        HasBall = _ball != null && _ball.IsInPlay &&
+                  GlobalPosition.DistanceTo(_ball.GlobalPosition) < 1.2f;
     }
 
     /// <summary>Lê as intenções e converte em movimento + animação.</summary>
@@ -99,8 +110,43 @@ public partial class Player : CharacterBody3D
     /// <summary>Regra geral: jogador de linha NUNCA pode usar mãos. Goalkeeper sobrescreve.</summary>
     public virtual bool CanHandleBallWithHands(Vector3 ballPosition) => false;
 
-    protected virtual void PerformKick()   => Animator?.PlayKick(IntendedKickPower);
-    protected virtual void PerformTackle() => Animator?.PlaySlideTackle();
+    protected virtual void PerformKick()
+    {
+        Animator?.PlayKick(IntendedKickPower);
+
+        if (_ball == null || !_ball.IsInPlay) return;
+        if (GlobalPosition.DistanceTo(_ball.GlobalPosition) > 1.5f) return;
+
+        var dir = Vector3.Zero;
+        if (LookTarget != Vector3.Zero && LookTarget.DistanceTo(GlobalPosition) > 0.1f)
+            dir = (LookTarget - GlobalPosition);
+        else
+            dir = -GlobalTransform.Basis.Z;
+
+        dir.Y = 0f;
+        if (dir.LengthSquared() < 0.01f) dir = Vector3.Forward;
+        dir = dir.Normalized();
+        dir += Vector3.Up * 0.12f;
+
+        float force = 7f + IntendedKickPower * 13f;
+        _ball.Kick(dir.Normalized(), force);
+        _ball.LastTouchedBy = this;
+        HasBall = false;
+    }
+
+    protected virtual void PerformTackle()
+    {
+        Animator?.PlaySlideTackle();
+
+        if (_ball == null || !_ball.IsInPlay) return;
+        if (GlobalPosition.DistanceTo(_ball.GlobalPosition) > 2.0f) return;
+
+        // Desvia a bola para longe
+        var dir = (_ball.GlobalPosition - GlobalPosition).Normalized();
+        dir.Y = 0.05f;
+        _ball.Kick(dir.Normalized(), 5f);
+        _ball.LastTouchedBy = this;
+    }
 
     private void ApplyGravity(float delta)
     {
