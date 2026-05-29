@@ -1,0 +1,159 @@
+[gd_scene load_steps=14 format=3 uid="uid://fieldscene001"]
+
+[ext_resource type="Script" path="res://scripts/entities/GoalDetector.cs" id="1_goaldetcs"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_pitch"]
+albedo_color = Color(0.13, 0.55, 0.13, 1)
+roughness = 1.0
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_goal"]
+albedo_color = Color(0.95, 0.95, 0.95, 1)
+roughness = 0.8
+
+[sub_resource type="BoxMesh" id="BoxMesh_pitch"]
+size = Vector3(105, 0.2, 68)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_pitch"]
+size = Vector3(105, 0.2, 68)
+
+[sub_resource type="BoxMesh" id="BoxMesh_postV"]
+size = Vector3(0.12, 2.44, 0.12)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_postV"]
+size = Vector3(0.14, 2.44, 0.14)
+
+[sub_resource type="BoxMesh" id="BoxMesh_crossbar"]
+size = Vector3(0.12, 0.12, 7.32)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_crossbar"]
+size = Vector3(0.14, 0.14, 7.34)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_goaldetA"]
+size = Vector3(2.0, 3.0, 7.0)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_penaltyA"]
+size = Vector3(16.5, 5.0, 40.32)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_goaldetB"]
+size = Vector3(2.0, 3.0, 7.0)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_penaltyB"]
+size = Vector3(16.5, 5.0, 40.32)
+
+; ─── Nó raiz ──────────────────────────────────────────────────
+[node name="Field" type="Node3D"]
+
+; ─── Campo (chão jogável) ─────────────────────────────────────
+[node name="PitchBody" type="StaticBody3D" parent="."]
+position = Vector3(0, -0.1, 0)
+
+[node name="PitchMesh" type="MeshInstance3D" parent="PitchBody"]
+mesh = SubResource("BoxMesh_pitch")
+surface_material_override/0 = SubResource("StandardMaterial3D_pitch")
+
+[node name="PitchCollision" type="CollisionShape3D" parent="PitchBody"]
+shape = SubResource("BoxShape3D_pitch")
+
+; ─── Gol A (time 0 defende — posição X = -52.5) ──────────────
+[node name="GoalA" type="Node3D" parent="."]
+position = Vector3(-52.5, 0, 0)
+
+[node name="PostLeft" type="StaticBody3D" parent="GoalA"]
+position = Vector3(0, 1.22, -3.66)
+
+[node name="PostLeftMesh" type="MeshInstance3D" parent="GoalA/PostLeft"]
+mesh = SubResource("BoxMesh_postV")
+surface_material_override/0 = SubResource("StandardMaterial3D_goal")
+
+[node name="PostLeftCol" type="CollisionShape3D" parent="GoalA/PostLeft"]
+shape = SubResource("BoxShape3D_postV")
+
+[node name="PostRight" type="StaticBody3D" parent="GoalA"]
+position = Vector3(0, 1.22, 3.66)
+
+[node name="PostRightMesh" type="MeshInstance3D" parent="GoalA/PostRight"]
+mesh = SubResource("BoxMesh_postV")
+surface_material_override/0 = SubResource("StandardMaterial3D_goal")
+
+[node name="PostRightCol" type="CollisionShape3D" parent="GoalA/PostRight"]
+shape = SubResource("BoxShape3D_postV")
+
+[node name="Crossbar" type="StaticBody3D" parent="GoalA"]
+position = Vector3(0, 2.44, 0)
+
+[node name="CrossbarMesh" type="MeshInstance3D" parent="GoalA/Crossbar"]
+mesh = SubResource("BoxMesh_crossbar")
+surface_material_override/0 = SubResource("StandardMaterial3D_goal")
+
+[node name="CrossbarCol" type="CollisionShape3D" parent="GoalA/Crossbar"]
+shape = SubResource("BoxShape3D_crossbar")
+
+[node name="GoalDetectorA" type="Area3D" parent="GoalA"]
+position = Vector3(-1.0, 1.22, 0)
+script = ExtResource("1_goaldetcs")
+Team = 0
+monitoring = true
+monitorable = false
+
+[node name="GoalDetColA" type="CollisionShape3D" parent="GoalA/GoalDetectorA"]
+shape = SubResource("BoxShape3D_goaldetA")
+
+[node name="PenaltyAreaA" type="Area3D" parent="GoalA"]
+position = Vector3(8.25, 2.5, 0)
+monitoring = true
+monitorable = false
+
+[node name="PenaltyColA" type="CollisionShape3D" parent="GoalA/PenaltyAreaA"]
+shape = SubResource("BoxShape3D_penaltyA")
+
+; ─── Gol B (time 1 defende — posição X = +52.5) ──────────────
+[node name="GoalB" type="Node3D" parent="."]
+position = Vector3(52.5, 0, 0)
+
+[node name="PostLeftB" type="StaticBody3D" parent="GoalB"]
+position = Vector3(0, 1.22, -3.66)
+
+[node name="PostLeftBMesh" type="MeshInstance3D" parent="GoalB/PostLeftB"]
+mesh = SubResource("BoxMesh_postV")
+surface_material_override/0 = SubResource("StandardMaterial3D_goal")
+
+[node name="PostLeftBCol" type="CollisionShape3D" parent="GoalB/PostLeftB"]
+shape = SubResource("BoxShape3D_postV")
+
+[node name="PostRightB" type="StaticBody3D" parent="GoalB"]
+position = Vector3(0, 1.22, 3.66)
+
+[node name="PostRightBMesh" type="MeshInstance3D" parent="GoalB/PostRightB"]
+mesh = SubResource("BoxMesh_postV")
+surface_material_override/0 = SubResource("StandardMaterial3D_goal")
+
+[node name="PostRightBCol" type="CollisionShape3D" parent="GoalB/PostRightB"]
+shape = SubResource("BoxShape3D_postV")
+
+[node name="CrossbarB" type="StaticBody3D" parent="GoalB"]
+position = Vector3(0, 2.44, 0)
+
+[node name="CrossbarBMesh" type="MeshInstance3D" parent="GoalB/CrossbarB"]
+mesh = SubResource("BoxMesh_crossbar")
+surface_material_override/0 = SubResource("StandardMaterial3D_goal")
+
+[node name="CrossbarBCol" type="CollisionShape3D" parent="GoalB/CrossbarB"]
+shape = SubResource("BoxShape3D_crossbar")
+
+[node name="GoalDetectorB" type="Area3D" parent="GoalB"]
+position = Vector3(1.0, 1.22, 0)
+script = ExtResource("1_goaldetcs")
+Team = 1
+monitoring = true
+monitorable = false
+
+[node name="GoalDetColB" type="CollisionShape3D" parent="GoalB/GoalDetectorB"]
+shape = SubResource("BoxShape3D_goaldetB")
+
+[node name="PenaltyAreaB" type="Area3D" parent="GoalB"]
+position = Vector3(-8.25, 2.5, 0)
+monitoring = true
+monitorable = false
+
+[node name="PenaltyColB" type="CollisionShape3D" parent="GoalB/PenaltyAreaB"]
+shape = SubResource("BoxShape3D_penaltyB")

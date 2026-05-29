@@ -19,6 +19,7 @@ public partial class TeamController : Node
     public List<Player>   Players    { get; private set; } = new();
 
     private Ball _ball;
+    private bool _playersLoaded = false;
 
     public override void _Ready()
     {
@@ -27,11 +28,31 @@ public partial class TeamController : Node
         Blackboard = new TeamBlackboard { Ball = _ball };
         AddChild(Blackboard);
 
+        // Defer player scan so MatchBootstrap can spawn players first
+        CallDeferred(nameof(FindAndApplyLineup));
+    }
+
+    private void FindAndApplyLineup()
+    {
+        Players.Clear();
         foreach (var node in GetTree().GetNodesInGroup("players"))
             if (node is Player p && p.Team == Team)
                 Players.Add(p);
 
         ApplyLineup();
+        _playersLoaded = true;
+    }
+
+    /// <summary>Re-escaneia jogadores do time. Chamar após spawn dinâmico.</summary>
+    public void RefreshPlayers()
+    {
+        Players.Clear();
+        foreach (var node in GetTree().GetNodesInGroup("players"))
+            if (node is Player p && p.Team == Team)
+                Players.Add(p);
+
+        ApplyLineup();
+        _playersLoaded = true;
     }
 
     public override void _PhysicsProcess(double delta)

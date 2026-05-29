@@ -14,6 +14,11 @@ config/name="FootballGame"
 config/description="Jogo de futebol 3D em desenvolvimento. Veja docs/architecture.md."
 config/features=PackedStringArray("4.3", "C#", "Forward Plus")
 config/icon="res://icon.svg"
+run/main_scene="res://scenes/match/Match.tscn"
+
+[autoload]
+
+GameManager="*res://scripts/core/GameManager.cs"
 
 [dotnet]
 

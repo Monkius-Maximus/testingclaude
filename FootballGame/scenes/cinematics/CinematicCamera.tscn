@@ -1,0 +1,7 @@
+[gd_scene load_steps=2 format=3 uid="uid://cinecam00001"]
+
+[ext_resource type="Script" path="res://scripts/camera/CinematicCamera.cs" id="1_cinecamcs"]
+
+[node name="CinematicCamera" type="Camera3D"]
+current = false
+script = ExtResource("1_cinecamcs")

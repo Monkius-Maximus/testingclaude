@@ -1,0 +1,11 @@
+[gd_resource type="PlayerRole" load_steps=1 format=3 uid="uid://cbnleft000001"]
+
+[resource]
+Type = 1
+DisplayName = "Zagueiro Esquerdo"
+BasePosition = Vector2(-0.2, -0.55)
+ActionRadius = 12.0
+DefensiveBias = 0.9
+Aggressiveness = 0.5
+StaminaUsage = 0.6
+CanUseHands = false

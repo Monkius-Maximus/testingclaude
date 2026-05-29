@@ -1,0 +1,12 @@
+[gd_resource type="TeamData" load_steps=1 format=3 uid="uid://teamhome00001"]
+
+[resource]
+TeamId = "team_home"
+ShortName = "CASA"
+FullName = "Time da Casa"
+Country = "BR"
+PrimaryColor = Color(0.1, 0.3, 0.9, 1)
+SecondaryColor = Color(1, 1, 1, 1)
+CrestPath = ""
+OverallRating = 75
+SquadIds = Array[String](["home_gk", "home_lb", "home_cb1", "home_cb2", "home_rb", "home_cm1", "home_cm2", "home_cm3", "home_lw", "home_rw", "home_st"])

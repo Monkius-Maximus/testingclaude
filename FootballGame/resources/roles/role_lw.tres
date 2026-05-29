@@ -1,0 +1,11 @@
+[gd_resource type="PlayerRole" load_steps=1 format=3 uid="uid://lwinger00001a"]
+
+[resource]
+Type = 6
+DisplayName = "Ponta Esquerda"
+BasePosition = Vector2(-0.65, 0.4)
+ActionRadius = 14.0
+DefensiveBias = 0.25
+Aggressiveness = 0.75
+StaminaUsage = 0.9
+CanUseHands = false

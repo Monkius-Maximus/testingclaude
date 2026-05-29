@@ -1,0 +1,11 @@
+[gd_resource type="PlayerRole" load_steps=1 format=3 uid="uid://cmcenter00001"]
+
+[resource]
+Type = 4
+DisplayName = "Meia Central"
+BasePosition = Vector2(0, -0.1)
+ActionRadius = 18.0
+DefensiveBias = 0.5
+Aggressiveness = 0.65
+StaminaUsage = 0.9
+CanUseHands = false

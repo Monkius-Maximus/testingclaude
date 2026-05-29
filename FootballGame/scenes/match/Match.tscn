@@ -1,0 +1,73 @@
+[gd_scene load_steps=13 format=3 uid="uid://matchscene01"]
+
+[ext_resource type="Script" path="res://scripts/match/MatchBootstrap.cs" id="1_bootstrap"]
+[ext_resource type="Script" path="res://scripts/ai/TeamController.cs" id="2_teamctrl"]
+[ext_resource type="Script" path="res://scripts/input/HumanInput.cs" id="3_humaninput"]
+[ext_resource type="Script" path="res://scripts/input/ControlSwitcher.cs" id="4_switcher"]
+[ext_resource type="Script" path="res://scripts/core/RulesManager.cs" id="5_rules"]
+[ext_resource type="Script" path="res://scripts/core/MatchClock.cs" id="6_clock"]
+[ext_resource type="Script" path="res://scripts/cinematics/CinematicDirector.cs" id="7_director"]
+[ext_resource type="PackedScene" path="res://scenes/entities/Ball.tscn" id="8_ball"]
+[ext_resource type="PackedScene" path="res://scenes/match/Field.tscn" id="9_field"]
+[ext_resource type="PackedScene" path="res://scenes/ui/HUD.tscn" id="10_hud"]
+[ext_resource type="PackedScene" path="res://scenes/cameras/CameraController.tscn" id="11_cam"]
+[ext_resource type="Script" path="res://scripts/camera/CinematicCamera.cs" id="12_cinecam"]
+
+[node name="Match" type="Node3D"]
+script = ExtResource("1_bootstrap")
+_teamAPath = NodePath("TeamA")
+_teamBPath = NodePath("TeamB")
+_ballPath = NodePath("Ball")
+_penaltyAreaAPath = NodePath("Field/GoalA/PenaltyAreaA")
+_penaltyAreaBPath = NodePath("Field/GoalB/PenaltyAreaB")
+
+[node name="Field" parent="." instance=ExtResource("9_field")]
+
+[node name="Ball" parent="." instance=ExtResource("8_ball")]
+position = Vector3(0, 0.5, 0)
+
+[node name="TeamA" type="Node" parent="."]
+script = ExtResource("2_teamctrl")
+Team = 0
+_ballPath = NodePath("../Ball")
+
+[node name="TeamB" type="Node" parent="."]
+script = ExtResource("2_teamctrl")
+Team = 1
+_ballPath = NodePath("../Ball")
+
+[node name="ControlSwitcher" type="Node" parent="."]
+script = ExtResource("4_switcher")
+_humanInputPaths = Array[NodePath]([NodePath("../HumanInput_P1")])
+_teamAPath = NodePath("../TeamA")
+_teamBPath = NodePath("../TeamB")
+
+[node name="HumanInput_P1" type="Node" parent="."]
+script = ExtResource("3_humaninput")
+ControllerIndex = 0
+Team = 0
+
+[node name="RulesManager" type="Node" parent="."]
+script = ExtResource("5_rules")
+_ballPath = NodePath("../Ball")
+
+[node name="MatchClock" type="Node" parent="."]
+script = ExtResource("6_clock")
+RealSecondsPerMatchMinute = 60.0
+MatchMinutesPerHalf = 45
+
+[node name="CinematicDirector" type="Node" parent="."]
+script = ExtResource("7_director")
+_gameplayCameraPath = NodePath("../MainCamera")
+_cinematicCameraPath = NodePath("../CinematicCamera")
+_ballPath = NodePath("../Ball")
+_rulesManagerPath = NodePath("../RulesManager")
+_hudPath = NodePath("../HUD")
+
+[node name="HUD" parent="." instance=ExtResource("10_hud")]
+
+[node name="MainCamera" parent="." instance=ExtResource("11_cam")]
+
+[node name="CinematicCamera" type="Camera3D" parent="."]
+current = false
+script = ExtResource("12_cinecam")
