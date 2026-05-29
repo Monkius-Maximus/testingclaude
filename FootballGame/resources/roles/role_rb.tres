@@ -1,0 +1,11 @@
+[gd_resource type="PlayerRole" load_steps=1 format=3 uid="uid://brightback001"]
+
+[resource]
+Type = 2
+DisplayName = "Lateral Direito"
+BasePosition = Vector2(0.5, -0.45)
+ActionRadius = 15.0
+DefensiveBias = 0.75
+Aggressiveness = 0.55
+StaminaUsage = 0.8
+CanUseHands = false

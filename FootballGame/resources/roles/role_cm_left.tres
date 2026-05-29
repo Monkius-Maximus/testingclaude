@@ -1,0 +1,11 @@
+[gd_resource type="PlayerRole" load_steps=1 format=3 uid="uid://cmleft0000001"]
+
+[resource]
+Type = 4
+DisplayName = "Meia Esquerdo"
+BasePosition = Vector2(-0.3, -0.1)
+ActionRadius = 18.0
+DefensiveBias = 0.5
+Aggressiveness = 0.6
+StaminaUsage = 0.85
+CanUseHands = false

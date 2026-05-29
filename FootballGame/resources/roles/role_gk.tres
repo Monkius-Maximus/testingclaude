@@ -1,0 +1,11 @@
+[gd_resource type="PlayerRole" load_steps=1 format=3 uid="uid://dkgvh3m7cx2ao"]
+
+[resource]
+Type = 0
+DisplayName = "Goleiro"
+BasePosition = Vector2(0, -0.85)
+ActionRadius = 8.0
+DefensiveBias = 0.95
+Aggressiveness = 0.3
+StaminaUsage = 0.4
+CanUseHands = true

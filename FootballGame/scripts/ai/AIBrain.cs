@@ -23,7 +23,20 @@ public partial class AIBrain : Node
 
     public override void _Ready()
     {
-        var teamCtrl = GetNode<TeamController>(_teamControllerPath);
+        // Auto-detecta o Player pai se não foi atribuído no editor
+        if (Player == null)
+            Player = GetParentOrNull<Player>();
+
+        if (_teamControllerPath != null && !_teamControllerPath.IsEmpty)
+        {
+            var teamCtrl = GetNode<TeamController>(_teamControllerPath);
+            Initialize(teamCtrl);
+        }
+    }
+
+    /// <summary>Inicializa o brain com o TeamController do time. Chamado pelo MatchBootstrap.</summary>
+    public void Initialize(TeamController teamCtrl)
+    {
         Blackboard = teamCtrl.Blackboard;
         _tree = BuildTreeForRole(Player.Role);
     }

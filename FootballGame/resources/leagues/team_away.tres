@@ -1,0 +1,12 @@
+[gd_resource type="TeamData" load_steps=1 format=3 uid="uid://teamaway00001"]
+
+[resource]
+TeamId = "team_away"
+ShortName = "FORA"
+FullName = "Time Visitante"
+Country = "BR"
+PrimaryColor = Color(0.9, 0.2, 0.1, 1)
+SecondaryColor = Color(1, 1, 1, 1)
+CrestPath = ""
+OverallRating = 73
+SquadIds = Array[String](["away_gk", "away_lb", "away_cb1", "away_cb2", "away_rb", "away_cm1", "away_cm2", "away_cm3", "away_lw", "away_rw", "away_st"])

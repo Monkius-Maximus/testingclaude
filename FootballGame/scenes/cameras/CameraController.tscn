@@ -1,0 +1,9 @@
+[gd_scene load_steps=2 format=3 uid="uid://camctrl00001"]
+
+[ext_resource type="Script" path="res://scripts/camera/CameraController.cs" id="1_camcs"]
+
+[node name="CameraController" type="Camera3D"]
+current = true
+position = Vector3(0, 18, 22)
+rotation = Vector3(-0.785, 0, 0)
+script = ExtResource("1_camcs")
