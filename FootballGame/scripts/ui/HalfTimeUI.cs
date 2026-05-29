@@ -3,16 +3,21 @@ using Godot;
 namespace FootballGame;
 
 /// <summary>
-/// Tela de intervalo. Mostra o placar atual e aguarda confirmação para o 2° tempo.
+/// Tela de intervalo. Aparece como overlay sobre a partida pausada (não troca
+/// de cena, para que o 2° tempo continue a mesma partida). Emite
+/// <see cref="ContinuePressed"/> quando o jogador confirma o retorno.
 /// </summary>
-public partial class HalfTimeUI : Control
+public partial class HalfTimeUI : CanvasLayer
 {
+    [Signal] public delegate void ContinuePressedEventHandler();
+
     [Export] private Label  _lblScore;
     [Export] private Label  _lblInfo;
     [Export] private Button _btnContinue;
 
     public override void _Ready()
     {
+        ProcessMode = ProcessModeEnum.Always;
         RefreshScore();
 
         if (_btnContinue != null)
@@ -33,8 +38,7 @@ public partial class HalfTimeUI : Control
 
     private void OnContinuePressed()
     {
-        // Volta à cena de partida para o segundo tempo
-        var gsm = GetNodeOrNull<GameStateManager>("/root/GameStateManager");
-        gsm?.GoTo(GameStateManager.GameState.Match);
+        EmitSignal(SignalName.ContinuePressed);
+        QueueFree();
     }
 }

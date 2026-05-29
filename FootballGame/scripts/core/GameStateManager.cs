@@ -34,7 +34,6 @@ public partial class GameStateManager : Node
     private const string SceneTeamSelect = "res://scenes/ui/TeamSelect.tscn";
     private const string SceneSettings   = "res://scenes/ui/Settings.tscn";
     private const string SceneMatch      = "res://scenes/match/Match.tscn";
-    private const string SceneHalfTime   = "res://scenes/ui/HalfTime.tscn";
     private const string SceneResult     = "res://scenes/ui/Result.tscn";
 
     [Signal] public delegate void StateChangedEventHandler(int previous, int next);
@@ -76,9 +75,8 @@ public partial class GameStateManager : Node
             case GameState.Match:
                 GetTree().ChangeSceneToFile(SceneMatch);
                 break;
-            case GameState.HalfTime:
-                GetTree().ChangeSceneToFile(SceneHalfTime);
-                break;
+            // HalfTime é tratado como overlay sobre a partida ao vivo
+            // (ver MatchBootstrap.OnHalfTime), não como troca de cena.
             case GameState.Result:
                 GetTree().ChangeSceneToFile(SceneResult);
                 break;

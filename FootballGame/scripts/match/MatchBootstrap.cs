@@ -23,6 +23,7 @@ public partial class MatchBootstrap : Node
     [Export] private NodePath _penaltyAreaBPath;
 
     private const string PauseMenuPath = "res://scenes/ui/PauseMenu.tscn";
+    private const string HalfTimePath  = "res://scenes/ui/HalfTime.tscn";
 
     // Posições de kickoff para time 0 (ataca em +X). Time 1 é espelhado.
     private static readonly Vector3[] KickoffPositionsTeam0 = new Vector3[]
@@ -186,44 +187,51 @@ public partial class MatchBootstrap : Node
 
     private void OnHalfTime()
     {
-        var gsm   = GetNodeOrNull<GameStateManager>("/root/GameStateManager");
-        var rules = GetNodeOrNull<RulesManager>("RulesManager");
-        var clock = GetNodeOrNull<MatchClock>("MatchClock");
-        var gm    = GetNodeOrNull<GameManager>("/root/GameManager");
+        // Registra o placar para exibição e pausa a partida ao vivo.
+        UpdateMatchResult(GetNodeOrNull<MatchClock>("MatchClock")?.CurrentMinute ?? 45);
 
-        if (gsm != null && rules != null)
-        {
-            var score = rules.Score;
-            gsm.CurrentMatchResult = new GameStateManager.MatchResult
-            {
-                ScoreHome    = score.Home,
-                ScoreAway    = score.Away,
-                MinutesPlayed = clock?.CurrentMinute ?? 45,
-                Mode          = gm?.CurrentMode ?? GameManager.MatchMode.Friendly
-            };
-            gsm.GoTo(GameStateManager.GameState.HalfTime);
-        }
+        GetTree().Paused = true;
+
+        var scene = GD.Load<PackedScene>(HalfTimePath);
+        if (scene == null) return;
+
+        var overlay = scene.Instantiate<HalfTimeUI>();
+        AddChild(overlay);
+        overlay.ContinuePressed += OnHalfTimeContinue;
+    }
+
+    private void OnHalfTimeContinue()
+    {
+        GetNodeOrNull<MatchClock>("MatchClock")?.StartSecondHalf();
+        GetTree().Paused = false;
     }
 
     private void OnFullTime()
     {
+        // Fim de jogo: garante que a partida não fique pausada e vai ao resultado.
+        UpdateMatchResult(GetNodeOrNull<MatchClock>("MatchClock")?.CurrentMinute ?? 90);
+
+        GetTree().Paused = false;
+        GetNodeOrNull<GameStateManager>("/root/GameStateManager")
+            ?.GoTo(GameStateManager.GameState.Result);
+    }
+
+    /// <summary>Preenche o resultado da partida no GameStateManager para exibição.</summary>
+    private void UpdateMatchResult(int minutesPlayed)
+    {
         var gsm   = GetNodeOrNull<GameStateManager>("/root/GameStateManager");
         var rules = GetNodeOrNull<RulesManager>("RulesManager");
-        var clock = GetNodeOrNull<MatchClock>("MatchClock");
         var gm    = GetNodeOrNull<GameManager>("/root/GameManager");
+        if (gsm == null || rules == null) return;
 
-        if (gsm != null && rules != null)
+        var score = rules.Score;
+        gsm.CurrentMatchResult = new GameStateManager.MatchResult
         {
-            var score = rules.Score;
-            gsm.CurrentMatchResult = new GameStateManager.MatchResult
-            {
-                ScoreHome    = score.Home,
-                ScoreAway    = score.Away,
-                MinutesPlayed = clock?.CurrentMinute ?? 90,
-                Mode          = gm?.CurrentMode ?? GameManager.MatchMode.Friendly
-            };
-            gsm.GoTo(GameStateManager.GameState.Result);
-        }
+            ScoreHome     = score.Home,
+            ScoreAway     = score.Away,
+            MinutesPlayed = minutesPlayed,
+            Mode          = gm?.CurrentMode ?? GameManager.MatchMode.Friendly
+        };
     }
 
     private void SetupCinematicDirector()
