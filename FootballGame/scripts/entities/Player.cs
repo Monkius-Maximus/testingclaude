@@ -171,7 +171,7 @@ public partial class Player : CharacterBody3D
     }
 
     /// <summary>Copia os atributos do PlayerData para as propriedades de física do jogador.</summary>
-    public void ApplyStats(PlayerData data)
+    public virtual void ApplyStats(PlayerData data)
     {
         if (data == null) return;
         PlayerId  = string.IsNullOrEmpty(data.PlayerId) ? PlayerId : data.PlayerId;

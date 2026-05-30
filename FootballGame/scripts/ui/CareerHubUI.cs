@@ -13,7 +13,10 @@ public partial class CareerHubUI : Control
     [Export] private Label          _lblSeason;
     [Export] private Label          _lblBalance;
     [Export] private Label          _lblNextMatch;
+    [Export] private Label          _lblCupStatus;
     [Export] private Button         _btnPlayNext;
+    [Export] private Button         _btnPlayCup;
+    [Export] private Button         _btnTransfer;
     [Export] private Button         _btnMainMenu;
     [Export] private VBoxContainer  _standingsContainer;
 
@@ -27,8 +30,10 @@ public partial class CareerHubUI : Control
         _gm  = GetNodeOrNull<GameManager>("/root/GameManager");
         _gsm = GetNodeOrNull<GameStateManager>("/root/GameStateManager");
 
-        if (_btnPlayNext != null) _btnPlayNext.Pressed += OnPlayNextPressed;
-        if (_btnMainMenu != null) _btnMainMenu.Pressed += OnMainMenuPressed;
+        if (_btnPlayNext  != null) _btnPlayNext.Pressed  += OnPlayNextPressed;
+        if (_btnPlayCup   != null) _btnPlayCup.Pressed   += OnPlayCupPressed;
+        if (_btnTransfer  != null) _btnTransfer.Pressed  += OnTransferPressed;
+        if (_btnMainMenu  != null) _btnMainMenu.Pressed  += OnMainMenuPressed;
 
         if (_cm == null || !_cm.HasCareer)
         {
@@ -66,6 +71,26 @@ public partial class CareerHubUI : Control
         }
 
         BuildStandingsTable(career);
+        RefreshCupStatus();
+    }
+
+    private void RefreshCupStatus()
+    {
+        var cup = GetNodeOrNull<CupManager>("/root/CareerManager")
+                    ?.GetParent()?.GetNodeOrNull<CupManager>("CupManager");
+        // CupManager is in the scene — get it from the tree
+        cup ??= GetTree().GetFirstNodeInGroup("cup_manager") as CupManager;
+
+        if (_lblCupStatus != null)
+        {
+            if (cup == null || !cup.HasCup)
+                _lblCupStatus.Text = "Copa: não iniciada";
+            else
+                _lblCupStatus.Text = $"Copa: {cup.GetRoundName()}";
+        }
+
+        if (_btnPlayCup != null)
+            _btnPlayCup.Disabled = cup == null || !cup.HasCup || cup.GetNextUserMatch() == null;
     }
 
     private void BuildStandingsTable(CareerManager.CareerData career)
@@ -134,6 +159,30 @@ public partial class CareerHubUI : Control
         _cm.IsAwaitingResult = true;
         _gsm.GoTo(GameStateManager.GameState.Match);
     }
+
+    private void OnPlayCupPressed()
+    {
+        if (_cm == null || _gm == null || _gsm == null) return;
+        var cup  = GetTree().GetFirstNodeInGroup("cup_manager") as CupManager;
+        var next = cup?.GetNextUserMatch();
+        if (next == null) return;
+
+        cup.SimulateNonUserMatches();
+
+        var homeTeam = _cm.GetTeamData(next.HomeTeamId) ?? MakeGhostTeam(next.HomeTeamId);
+        var awayTeam = _cm.GetTeamData(next.AwayTeamId) ?? MakeGhostTeam(next.AwayTeamId);
+
+        _gm.HomeTeam    = homeTeam;
+        _gm.AwayTeam    = awayTeam;
+        _gm.CurrentMode = GameManager.MatchMode.Cup;
+        _gm.HomeLineup  = GD.Load<Lineup>("res://resources/lineups/lineup_433.tres");
+        _gm.AwayLineup  = _gm.HomeLineup;
+        _cm.IsAwaitingResult = true;
+        _gsm.GoTo(GameStateManager.GameState.Match);
+    }
+
+    private void OnTransferPressed()
+        => _gsm?.GoTo(GameStateManager.GameState.TransferMarket);
 
     private void OnMainMenuPressed()
         => _gsm?.GoTo(GameStateManager.GameState.MainMenu);

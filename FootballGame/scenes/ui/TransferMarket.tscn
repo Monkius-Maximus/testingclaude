@@ -1,0 +1,105 @@
+[gd_scene load_steps=2 format=3 uid="uid://transfer_mkt001"]
+
+[ext_resource type="Script" path="res://scripts/ui/TransferMarketUI.cs" id="1_tmui"]
+
+[node name="TransferMarket" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource("1_tmui")
+_lblBalance = NodePath("Main/Header/LblBalance")
+_marketList = NodePath("Main/Body/MarketPanel/Scroll/MarketList")
+_squadList = NodePath("Main/Body/SquadPanel/Scroll/SquadList")
+_btnBack = NodePath("Main/Footer/BtnBack")
+_lblStatus = NodePath("Main/Footer/LblStatus")
+
+[node name="Background" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color(0.05, 0.1, 0.18, 1)
+
+[node name="Main" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 24.0
+offset_top = 16.0
+offset_right = -24.0
+offset_bottom = -16.0
+theme_override_constants/separation = 14
+
+[node name="Header" type="HBoxContainer" parent="Main"]
+layout_mode = 2
+
+[node name="LblTitle" type="Label" parent="Main/Header"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "MERCADO DE TRANSFERÊNCIAS"
+theme_override_font_sizes/font_size = 28
+
+[node name="LblBalance" type="Label" parent="Main/Header"]
+layout_mode = 2
+text = "Saldo: R$ 0"
+horizontal_alignment = 2
+theme_override_font_sizes/font_size = 20
+
+[node name="Body" type="HBoxContainer" parent="Main"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 20
+
+[node name="MarketPanel" type="VBoxContainer" parent="Main/Body"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="LblMarket" type="Label" parent="Main/Body/MarketPanel"]
+layout_mode = 2
+text = "Mercado"
+theme_override_font_sizes/font_size = 18
+
+[node name="Scroll" type="ScrollContainer" parent="Main/Body/MarketPanel"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="MarketList" type="VBoxContainer" parent="Main/Body/MarketPanel/Scroll"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 6
+
+[node name="SquadPanel" type="VBoxContainer" parent="Main/Body"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="LblSquad" type="Label" parent="Main/Body/SquadPanel"]
+layout_mode = 2
+text = "Meu Elenco"
+theme_override_font_sizes/font_size = 18
+
+[node name="Scroll" type="ScrollContainer" parent="Main/Body/SquadPanel"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="SquadList" type="VBoxContainer" parent="Main/Body/SquadPanel/Scroll"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 6
+
+[node name="Footer" type="HBoxContainer" parent="Main"]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="BtnBack" type="Button" parent="Main/Footer"]
+layout_mode = 2
+custom_minimum_size = Vector2(160, 48)
+text = "Voltar"
+theme_override_font_sizes/font_size = 18
+
+[node name="LblStatus" type="Label" parent="Main/Footer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = ""
+theme_override_font_sizes/font_size = 16

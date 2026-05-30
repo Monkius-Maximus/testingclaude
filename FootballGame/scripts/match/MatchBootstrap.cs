@@ -159,7 +159,14 @@ public partial class MatchBootstrap : Node
                 var brain = player.GetNodeOrNull<AIBrain>("AIBrain");
                 brain?.Initialize(tc);
             }
+
+            // Registra no SubstitutionManager
+            GetNodeOrNull<SubstitutionManager>("SubstitutionManager")?.RegisterPlayer(player);
         }
+
+        // Gera banco de reservas para este time
+        GetNodeOrNull<SubstitutionManager>("SubstitutionManager")
+            ?.GenerateBench(teamData, team);
     }
 
     private void SetTeamColor(Player player, int team)
@@ -243,7 +250,8 @@ public partial class MatchBootstrap : Node
             ScoreHome     = score.Home,
             ScoreAway     = score.Away,
             MinutesPlayed = minutesPlayed,
-            Mode          = gm?.CurrentMode ?? GameManager.MatchMode.Friendly
+            Mode          = gm?.CurrentMode ?? GameManager.MatchMode.Friendly,
+            Stats         = GetNodeOrNull<MatchStats>("MatchStats")
         };
     }
 

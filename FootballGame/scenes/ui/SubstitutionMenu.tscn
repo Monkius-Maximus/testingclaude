@@ -1,0 +1,112 @@
+[gd_scene load_steps=2 format=3 uid="uid://subst_menu001"]
+
+[ext_resource type="Script" path="res://scripts/ui/SubstitutionUI.cs" id="1_subui"]
+
+[node name="SubstitutionMenu" type="CanvasLayer"]
+layer = 12
+script = ExtResource("1_subui")
+_fieldList = NodePath("Panel/HBox/FieldPanel/FieldList")
+_benchList = NodePath("Panel/HBox/BenchPanel/BenchList")
+_btnConfirm = NodePath("Panel/Footer/BtnConfirm")
+_btnClose = NodePath("Panel/Footer/BtnClose")
+_lblInfo = NodePath("Panel/Footer/LblInfo")
+_lblSubsLeft = NodePath("Panel/Header/LblSubsLeft")
+
+[node name="Overlay" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color(0, 0, 0, 0.6)
+
+[node name="Panel" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -380.0
+offset_top = -280.0
+offset_right = 380.0
+offset_bottom = 280.0
+theme_override_constants/separation = 12
+
+[node name="Header" type="HBoxContainer" parent="Panel"]
+layout_mode = 2
+
+[node name="LblTitle" type="Label" parent="Panel/Header"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "SUBSTITUIÇÕES"
+theme_override_font_sizes/font_size = 24
+
+[node name="LblSubsLeft" type="Label" parent="Panel/Header"]
+layout_mode = 2
+text = "Restantes: 3"
+horizontal_alignment = 2
+theme_override_font_sizes/font_size = 16
+
+[node name="HBox" type="HBoxContainer" parent="Panel"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 20
+
+[node name="FieldPanel" type="VBoxContainer" parent="Panel/HBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="LblField" type="Label" parent="Panel/HBox/FieldPanel"]
+layout_mode = 2
+text = "Em Campo"
+theme_override_font_sizes/font_size = 16
+
+[node name="FieldScroll" type="ScrollContainer" parent="Panel/HBox/FieldPanel"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="FieldList" type="VBoxContainer" parent="Panel/HBox/FieldPanel/FieldScroll"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 4
+
+[node name="BenchPanel" type="VBoxContainer" parent="Panel/HBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="LblBench" type="Label" parent="Panel/HBox/BenchPanel"]
+layout_mode = 2
+text = "Banco"
+theme_override_font_sizes/font_size = 16
+
+[node name="BenchScroll" type="ScrollContainer" parent="Panel/HBox/BenchPanel"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="BenchList" type="VBoxContainer" parent="Panel/HBox/BenchPanel/BenchScroll"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 4
+
+[node name="Footer" type="HBoxContainer" parent="Panel"]
+layout_mode = 2
+alignment = 1
+theme_override_constants/separation = 16
+
+[node name="LblInfo" type="Label" parent="Panel/Footer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Selecione um jogador em campo e um do banco."
+theme_override_font_sizes/font_size = 14
+
+[node name="BtnConfirm" type="Button" parent="Panel/Footer"]
+layout_mode = 2
+custom_minimum_size = Vector2(140, 44)
+text = "Confirmar"
+theme_override_font_sizes/font_size = 16
+
+[node name="BtnClose" type="Button" parent="Panel/Footer"]
+layout_mode = 2
+custom_minimum_size = Vector2(100, 44)
+text = "Fechar"
+theme_override_font_sizes/font_size = 16

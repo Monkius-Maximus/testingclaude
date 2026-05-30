@@ -11,6 +11,7 @@ public partial class ResultUI : Control
     [Export] private Label  _lblScore;
     [Export] private Label  _lblMode;
     [Export] private Label  _lblTime;
+    [Export] private Label  _lblStats;
     [Export] private Button _btnPlayAgain;
     [Export] private Button _btnCareerHub;
     [Export] private Button _btnMainMenu;
@@ -59,6 +60,22 @@ public partial class ResultUI : Control
             };
 
         if (_lblTime != null) _lblTime.Text = $"{r.MinutesPlayed}'";
+
+        // Estatísticas da partida (MatchStats reseta a cada partida)
+        if (_lblStats != null && r.Stats != null)
+        {
+            var s = r.Stats;
+            _lblStats.Text =
+                $"Posse: {s.PossessionPct(0):F0}% – {s.PossessionPct(1):F0}%\n" +
+                $"Chutes: {s.Shots(0)} – {s.Shots(1)}   (No gol: {s.ShotsOnTarget(0)} – {s.ShotsOnTarget(1)})\n" +
+                $"Passes: {s.PassCompleted(0)}/{s.PassAttempts(0)} – {s.PassCompleted(1)}/{s.PassAttempts(1)}\n" +
+                $"Faltas: {s.Fouls(0)} – {s.Fouls(1)}   " +
+                $"Amarelos: {s.YellowCards(0)} – {s.YellowCards(1)}";
+        }
+        else if (_lblStats != null)
+        {
+            _lblStats.Text = "";
+        }
     }
 
     private void OnPlayAgainPressed()

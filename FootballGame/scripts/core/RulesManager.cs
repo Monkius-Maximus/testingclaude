@@ -15,6 +15,7 @@ public partial class RulesManager : Node
     [Signal] public delegate void GoalKickEventHandler(int team);
     [Signal] public delegate void ThrowInEventHandler(int team, Vector3 position);
     [Signal] public delegate void GoalEventHandler(int team);
+    [Signal] public delegate void PenaltyAwardedEventHandler(int fouledTeam);
 
     private Ball _ball;
     private readonly int[] _score = { 0, 0 };
@@ -40,6 +41,16 @@ public partial class RulesManager : Node
         _ball.BallOutRight  += (last) => OnBallOutLateral(last, "right");
         _ball.BallOutTop    += (last) => OnBallOutEndline(last, "top");
         _ball.BallOutBottom += (last) => OnBallOutEndline(last, "bottom");
+
+        // Conecta ao RefereeManager para propagar pênaltis
+        var referee = GetTree().GetFirstNodeInGroup("referee") as RefereeManager;
+        if (referee != null)
+            referee.PenaltyAwarded += (t) => EmitSignal(SignalName.PenaltyAwarded, t);
+
+        // Conecta ao MatchStats para contabilizar escanteios
+        var stats = GetTree().GetFirstNodeInGroup("match_stats") as MatchStats;
+        if (stats != null)
+            CornerKick += (team, _) => stats.RegisterCorner(team);
     }
 
     // ── Saída pela lateral → Arremesso lateral ───────────────────

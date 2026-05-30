@@ -6,6 +6,7 @@
 layer = 10
 script = ExtResource("1_pausecs")
 _btnContinue = NodePath("Panel/VBox/BtnContinue")
+_btnSubstitution = NodePath("Panel/VBox/BtnSubstitution")
 _btnSettings = NodePath("Panel/VBox/BtnSettings")
 _btnAbandon = NodePath("Panel/VBox/BtnAbandon")
 _panel = NodePath("Panel")
@@ -43,6 +44,12 @@ theme_override_font_sizes/font_size = 30
 layout_mode = 2
 custom_minimum_size = Vector2(300, 52)
 text = "Continuar"
+theme_override_font_sizes/font_size = 20
+
+[node name="BtnSubstitution" type="Button" parent="Panel/VBox"]
+layout_mode = 2
+custom_minimum_size = Vector2(300, 52)
+text = "Substituições"
 theme_override_font_sizes/font_size = 20
 
 [node name="BtnSettings" type="Button" parent="Panel/VBox"]

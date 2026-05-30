@@ -9,6 +9,7 @@ namespace FootballGame;
 public partial class PauseUI : CanvasLayer
 {
     [Export] private Button _btnContinue;
+    [Export] private Button _btnSubstitution;
     [Export] private Button _btnSettings;
     [Export] private Button _btnAbandon;
     [Export] private Control _panel;
@@ -18,9 +19,10 @@ public partial class PauseUI : CanvasLayer
         ProcessMode = ProcessModeEnum.Always;
         Hide();
 
-        if (_btnContinue != null) _btnContinue.Pressed += OnContinuePressed;
-        if (_btnSettings != null) _btnSettings.Pressed += OnSettingsPressed;
-        if (_btnAbandon  != null) _btnAbandon.Pressed  += OnAbandonPressed;
+        if (_btnContinue     != null) _btnContinue.Pressed     += OnContinuePressed;
+        if (_btnSubstitution != null) _btnSubstitution.Pressed += OnSubstitutionPressed;
+        if (_btnSettings     != null) _btnSettings.Pressed     += OnSettingsPressed;
+        if (_btnAbandon      != null) _btnAbandon.Pressed      += OnAbandonPressed;
     }
 
     public override void _UnhandledInput(InputEvent @event)
@@ -47,6 +49,13 @@ public partial class PauseUI : CanvasLayer
         GetTree().Paused = false;
         if (_panel != null) _panel.Visible = false;
         Hide();
+    }
+
+    private void OnSubstitutionPressed()
+    {
+        Hide();
+        var subUI = GetTree().GetFirstNodeInGroup("substitution_ui") as SubstitutionUI;
+        subUI?.OpenFor(0); // Sempre abre para o time 0 (jogador humano)
     }
 
     private void OnSettingsPressed()

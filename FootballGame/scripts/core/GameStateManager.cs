@@ -20,15 +20,17 @@ public partial class GameStateManager : Node
         HalfTime,
         Result,
         CareerSetup,
-        CareerHub
+        CareerHub,
+        TransferMarket
     }
 
     public struct MatchResult
     {
-        public int   ScoreHome;
-        public int   ScoreAway;
-        public int   MinutesPlayed;
+        public int        ScoreHome;
+        public int        ScoreAway;
+        public int        MinutesPlayed;
         public GameManager.MatchMode Mode;
+        public MatchStats Stats; // referência às stats da partida (null se não disponível)
     }
 
     // ── Caminhos de cena ──────────────────────────────────────────
@@ -37,8 +39,9 @@ public partial class GameStateManager : Node
     private const string SceneSettings    = "res://scenes/ui/Settings.tscn";
     private const string SceneMatch       = "res://scenes/match/Match.tscn";
     private const string SceneResult      = "res://scenes/ui/Result.tscn";
-    private const string SceneCareerSetup = "res://scenes/ui/CareerSetup.tscn";
-    private const string SceneCareerHub   = "res://scenes/ui/CareerHub.tscn";
+    private const string SceneCareerSetup    = "res://scenes/ui/CareerSetup.tscn";
+    private const string SceneCareerHub      = "res://scenes/ui/CareerHub.tscn";
+    private const string SceneTransferMarket = "res://scenes/ui/TransferMarket.tscn";
 
     [Signal] public delegate void StateChangedEventHandler(int previous, int next);
 
@@ -89,6 +92,9 @@ public partial class GameStateManager : Node
                 break;
             case GameState.CareerHub:
                 GetTree().ChangeSceneToFile(SceneCareerHub);
+                break;
+            case GameState.TransferMarket:
+                GetTree().ChangeSceneToFile(SceneTransferMarket);
                 break;
         }
     }

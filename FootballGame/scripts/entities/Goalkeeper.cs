@@ -11,6 +11,11 @@ public partial class Goalkeeper : Player
     /// <summary>Area3D que demarca a grande área do goleiro. Atribuir no editor.</summary>
     [Export] public Area3D PenaltyArea;
 
+    /// <summary>Atributos exclusivos de goleiro (herdados de PlayerData via ApplyStats).</summary>
+    public int Reflexes    { get; set; } = 70;
+    public int Diving      { get; set; } = 70;
+    public int GkPositioning { get; set; } = 70;
+
     /// <summary>Goleiro pode "mergulhar" — ação especial.</summary>
     public bool    IntendsToDive { get; set; } = false;
     public Vector3 DiveDirection { get; set; } = Vector3.Zero;
@@ -19,6 +24,15 @@ public partial class Goalkeeper : Player
     {
         if (PenaltyArea == null) return false;
         return PenaltyArea.OverlapsBody(this);
+    }
+
+    public override void ApplyStats(PlayerData data)
+    {
+        base.ApplyStats(data);
+        if (data == null) return;
+        Reflexes     = data.Reflexes;
+        Diving       = data.Diving;
+        GkPositioning = data.GkPositioning;
     }
 
     // Goleiro é levemente mais lento no campo aberto
