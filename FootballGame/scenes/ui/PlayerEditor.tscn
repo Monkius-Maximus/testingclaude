@@ -1,0 +1,185 @@
+[gd_scene load_steps=2 format=3 uid="uid://playereditor01"]
+
+[ext_resource type="Script" path="res://scripts/ui/PlayerEditorUI.cs" id="1_pedit"]
+
+[node name="PlayerEditor" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource("1_pedit")
+_editFullName = NodePath("Main/Body/Left/FormGrid/EditFullName")
+_editShortName = NodePath("Main/Body/Left/FormGrid/EditShortName")
+_editNationality = NodePath("Main/Body/Left/FormGrid/EditNationality")
+_spinAge = NodePath("Main/Body/Left/FormGrid/SpinAge")
+_optRole = NodePath("Main/Body/Left/FormGrid/OptRole")
+_lblOverall = NodePath("Main/Body/Left/LblOverall")
+_optSaved = NodePath("Main/Body/Left/SavedRow/OptSaved")
+_btnGenerate = NodePath("Main/Body/Left/BtnGenerate")
+_btnSave = NodePath("Main/Body/Left/SaveRow/BtnSave")
+_btnLoad = NodePath("Main/Body/Left/SavedRow/BtnLoad")
+_btnDelete = NodePath("Main/Body/Left/SavedRow/BtnDelete")
+_btnNew = NodePath("Main/Body/Left/SaveRow/BtnNew")
+_attrContainer = NodePath("Main/Body/Right/Scroll/AttrContainer")
+_btnBack = NodePath("Main/Footer/BtnBack")
+_lblStatus = NodePath("Main/Footer/LblStatus")
+
+[node name="Background" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color(0.06, 0.1, 0.17, 1)
+
+[node name="Main" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 24.0
+offset_top = 16.0
+offset_right = -24.0
+offset_bottom = -16.0
+theme_override_constants/separation = 12
+
+[node name="LblTitle" type="Label" parent="Main"]
+layout_mode = 2
+text = "EDITOR DE JOGADOR"
+theme_override_font_sizes/font_size = 28
+
+[node name="Body" type="HBoxContainer" parent="Main"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 24
+
+[node name="Left" type="VBoxContainer" parent="Main/Body"]
+layout_mode = 2
+custom_minimum_size = Vector2(380, 0)
+theme_override_constants/separation = 10
+
+[node name="FormGrid" type="GridContainer" parent="Main/Body/Left"]
+layout_mode = 2
+theme_override_constants/h_separation = 12
+theme_override_constants/v_separation = 8
+columns = 2
+
+[node name="LblFullName" type="Label" parent="Main/Body/Left/FormGrid"]
+layout_mode = 2
+text = "Nome completo"
+
+[node name="EditFullName" type="LineEdit" parent="Main/Body/Left/FormGrid"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="LblShortName" type="Label" parent="Main/Body/Left/FormGrid"]
+layout_mode = 2
+text = "Nome curto"
+
+[node name="EditShortName" type="LineEdit" parent="Main/Body/Left/FormGrid"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="LblNationality" type="Label" parent="Main/Body/Left/FormGrid"]
+layout_mode = 2
+text = "Nacionalidade"
+
+[node name="EditNationality" type="LineEdit" parent="Main/Body/Left/FormGrid"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="LblAge" type="Label" parent="Main/Body/Left/FormGrid"]
+layout_mode = 2
+text = "Idade"
+
+[node name="SpinAge" type="SpinBox" parent="Main/Body/Left/FormGrid"]
+layout_mode = 2
+min_value = 15.0
+max_value = 45.0
+value = 23.0
+
+[node name="LblRole" type="Label" parent="Main/Body/Left/FormGrid"]
+layout_mode = 2
+text = "Função"
+
+[node name="OptRole" type="OptionButton" parent="Main/Body/Left/FormGrid"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="LblOverall" type="Label" parent="Main/Body/Left"]
+layout_mode = 2
+text = "OVR 70"
+horizontal_alignment = 1
+theme_override_font_sizes/font_size = 32
+
+[node name="BtnGenerate" type="Button" parent="Main/Body/Left"]
+layout_mode = 2
+custom_minimum_size = Vector2(0, 44)
+text = "Gerar atributos pela função"
+theme_override_font_sizes/font_size = 16
+
+[node name="SaveRow" type="HBoxContainer" parent="Main/Body/Left"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="BtnNew" type="Button" parent="Main/Body/Left/SaveRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Novo"
+
+[node name="BtnSave" type="Button" parent="Main/Body/Left/SaveRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Salvar"
+
+[node name="SavedRow" type="HBoxContainer" parent="Main/Body/Left"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="OptSaved" type="OptionButton" parent="Main/Body/Left/SavedRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="BtnLoad" type="Button" parent="Main/Body/Left/SavedRow"]
+layout_mode = 2
+text = "Carregar"
+
+[node name="BtnDelete" type="Button" parent="Main/Body/Left/SavedRow"]
+layout_mode = 2
+text = "Excluir"
+
+[node name="Right" type="VBoxContainer" parent="Main/Body"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 8
+
+[node name="LblAttrs" type="Label" parent="Main/Body/Right"]
+layout_mode = 2
+text = "Atributos"
+theme_override_font_sizes/font_size = 18
+
+[node name="Scroll" type="ScrollContainer" parent="Main/Body/Right"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="AttrContainer" type="VBoxContainer" parent="Main/Body/Right/Scroll"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 8
+
+[node name="Footer" type="HBoxContainer" parent="Main"]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="BtnBack" type="Button" parent="Main/Footer"]
+layout_mode = 2
+custom_minimum_size = Vector2(140, 44)
+text = "Voltar"
+theme_override_font_sizes/font_size = 16
+
+[node name="LblStatus" type="Label" parent="Main/Footer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 1
+text = ""
+vertical_alignment = 1
+theme_override_font_sizes/font_size = 14

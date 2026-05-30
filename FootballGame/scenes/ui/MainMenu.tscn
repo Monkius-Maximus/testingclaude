@@ -10,6 +10,7 @@ anchor_bottom = 1.0
 script = ExtResource("1_mainmenucs")
 _btnPlay = NodePath("Center/VBox/BtnPlay")
 _btnCareer = NodePath("Center/VBox/BtnCareer")
+_btnEditor = NodePath("Center/VBox/BtnEditor")
 _btnSettings = NodePath("Center/VBox/BtnSettings")
 _btnQuit = NodePath("Center/VBox/BtnQuit")
 _lblVersion = NodePath("LblVersion")
@@ -48,6 +49,12 @@ theme_override_font_sizes/font_size = 22
 layout_mode = 2
 custom_minimum_size = Vector2(300, 52)
 text = "Modo Carreira"
+theme_override_font_sizes/font_size = 22
+
+[node name="BtnEditor" type="Button" parent="Center/VBox"]
+layout_mode = 2
+custom_minimum_size = Vector2(300, 52)
+text = "Editor"
 theme_override_font_sizes/font_size = 22
 
 [node name="BtnSettings" type="Button" parent="Center/VBox"]

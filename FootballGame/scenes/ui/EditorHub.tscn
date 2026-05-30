@@ -1,0 +1,62 @@
+[gd_scene load_steps=2 format=3 uid="uid://editorhub0001"]
+
+[ext_resource type="Script" path="res://scripts/ui/EditorHubUI.cs" id="1_edhub"]
+
+[node name="EditorHub" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource("1_edhub")
+_btnPlayerEditor = NodePath("Center/VBox/BtnPlayerEditor")
+_btnClubEditor = NodePath("Center/VBox/BtnClubEditor")
+_btnBack = NodePath("Center/VBox/BtnBack")
+_lblCounts = NodePath("Center/VBox/LblCounts")
+
+[node name="Background" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color(0.08, 0.12, 0.2, 1)
+
+[node name="Center" type="CenterContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="VBox" type="VBoxContainer" parent="Center"]
+layout_mode = 2
+custom_minimum_size = Vector2(340, 0)
+theme_override_constants/separation = 16
+
+[node name="LblTitle" type="Label" parent="Center/VBox"]
+layout_mode = 2
+text = "EDITOR"
+horizontal_alignment = 1
+theme_override_font_sizes/font_size = 44
+
+[node name="LblCounts" type="Label" parent="Center/VBox"]
+layout_mode = 2
+text = "Conteúdo salvo: 0 jogador(es) · 0 clube(s)"
+horizontal_alignment = 1
+theme_override_font_sizes/font_size = 14
+
+[node name="BtnPlayerEditor" type="Button" parent="Center/VBox"]
+layout_mode = 2
+custom_minimum_size = Vector2(340, 52)
+text = "Editor de Jogador"
+theme_override_font_sizes/font_size = 22
+
+[node name="BtnClubEditor" type="Button" parent="Center/VBox"]
+layout_mode = 2
+custom_minimum_size = Vector2(340, 52)
+text = "Editor de Clube"
+theme_override_font_sizes/font_size = 22
+
+[node name="BtnBack" type="Button" parent="Center/VBox"]
+layout_mode = 2
+custom_minimum_size = Vector2(340, 52)
+text = "Voltar"
+theme_override_font_sizes/font_size = 22

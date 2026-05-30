@@ -312,25 +312,38 @@ mudança de código. As chamadas já estão nos lugares certos:
 
 ---
 
-## Editor In-Game (Roadmap)
+## Editor In-Game
 
-A pedido, o projeto será expandido futuramente com um editor in-game para:
+Acessível pelo menu principal → **Editor** (`scenes/ui/EditorHub.tscn`).
+O conteúdo criado é salvo em `user://custom/` e fica disponível na carreira.
 
-### Editor de Jogadores
-- Editar `PlayerData` (nome, atributos, aparência) de um jogador do elenco
-- Selecionar variante de hair/boots/face
-- Preview em tempo real do jogador 3D com o kit do time
+### Editor de Jogadores — ✅ IMPLEMENTADO
+- Edita `PlayerData`: identidade (nome, nacionalidade, idade), todos os atributos
+  via sliders (campo + goleiro) com OVR recalculado ao vivo
+- Botão "Gerar atributos pela função" usa `PlayerGenerator` para distribuir
+  stats conforme a posição escolhida
+- Salva/carrega/exclui jogadores em `user://custom/players/*.tres`
 
-**Nós envolvidos:** `PlayerData.cs`, futuro `PlayerVisuals.cs`, `SubViewport` para preview
+**Arquivos:** `scenes/ui/PlayerEditor.tscn`, `scripts/ui/PlayerEditorUI.cs`,
+`scripts/core/CustomContent.cs`
 
-### Editor de Clubes
-- Editar `TeamData` (nome, cores primária/secundária, escudo)
-- O shader de kit atualiza em tempo real no preview
-- Importar PNG como escudo diretamente (via `FileDialog`)
+**Falta (quando houver assets):** seleção de variante hair/boots/face e
+preview 3D em tempo real (`SubViewport` + futuro `PlayerVisuals.cs`).
 
-**Nós envolvidos:** `TeamData.cs`, `KitShaderMaterial`, `TextureRect` para preview
+### Editor de Clubes — ✅ IMPLEMENTADO
+- Edita `TeamData`: nome curto/completo, país, cores primária/secundária
+  (com `ColorPickerButton` + preview de uniforme), overall base
+- Gerencia o elenco: gera 11 titulares pela formação 4-3-3, adiciona/remove
+  jogadores, mostra overall médio
+- Salva/carrega/exclui clubes em `user://custom/teams/*.tres`
+- Clubes salvos entram automaticamente na seleção do **Modo Carreira**
 
-### Editor de Estádios
+**Arquivos:** `scenes/ui/ClubEditor.tscn`, `scripts/ui/ClubEditorUI.cs`
+
+**Falta (quando houver assets):** preview do kit com o `KitShaderMaterial`
+real e importação de PNG como escudo via `FileDialog`.
+
+### Editor de Estádios — ⏳ FUTURO
 - Posicionar as peças modulares de estádio em grid
 - Definir capacidade, nome, e cidade
 - Salvar como recurso `.tres` de `StadiumData` (a criar)

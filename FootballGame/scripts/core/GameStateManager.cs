@@ -21,7 +21,10 @@ public partial class GameStateManager : Node
         Result,
         CareerSetup,
         CareerHub,
-        TransferMarket
+        TransferMarket,
+        EditorHub,
+        PlayerEditor,
+        ClubEditor
     }
 
     public struct MatchResult
@@ -42,6 +45,9 @@ public partial class GameStateManager : Node
     private const string SceneCareerSetup    = "res://scenes/ui/CareerSetup.tscn";
     private const string SceneCareerHub      = "res://scenes/ui/CareerHub.tscn";
     private const string SceneTransferMarket = "res://scenes/ui/TransferMarket.tscn";
+    private const string SceneEditorHub      = "res://scenes/ui/EditorHub.tscn";
+    private const string ScenePlayerEditor   = "res://scenes/ui/PlayerEditor.tscn";
+    private const string SceneClubEditor     = "res://scenes/ui/ClubEditor.tscn";
 
     [Signal] public delegate void StateChangedEventHandler(int previous, int next);
 
@@ -95,6 +101,15 @@ public partial class GameStateManager : Node
                 break;
             case GameState.TransferMarket:
                 GetTree().ChangeSceneToFile(SceneTransferMarket);
+                break;
+            case GameState.EditorHub:
+                GetTree().ChangeSceneToFile(SceneEditorHub);
+                break;
+            case GameState.PlayerEditor:
+                GetTree().ChangeSceneToFile(ScenePlayerEditor);
+                break;
+            case GameState.ClubEditor:
+                GetTree().ChangeSceneToFile(SceneClubEditor);
                 break;
         }
     }

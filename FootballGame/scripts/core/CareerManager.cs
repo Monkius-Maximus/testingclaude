@@ -294,6 +294,11 @@ public partial class CareerManager : Node
             }
             name = dir.GetNext();
         }
+
+        // Clubes criados no editor in-game também participam da liga.
+        foreach (var custom in CustomContent.LoadAllTeams())
+            if (!string.IsNullOrEmpty(custom.TeamId))
+                _teamCache[custom.TeamId] = custom;
     }
 
     // ── Persistência ─────────────────────────────────────────────────────────

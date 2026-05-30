@@ -45,6 +45,10 @@ public partial class CareerSetupUI : Control
             }
             name = dir.GetNext();
         }
+
+        // Inclui clubes criados no editor in-game (user://custom/teams/).
+        foreach (var custom in CustomContent.LoadAllTeams())
+            _teams.Add(custom);
     }
 
     private void PopulateTeamOption()

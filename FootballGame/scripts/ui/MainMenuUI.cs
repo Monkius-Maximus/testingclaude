@@ -11,6 +11,7 @@ public partial class MainMenuUI : Control
 
     [Export] private Button _btnPlay;
     [Export] private Button _btnCareer;
+    [Export] private Button _btnEditor;
     [Export] private Button _btnSettings;
     [Export] private Button _btnQuit;
     [Export] private Label  _lblVersion;
@@ -22,6 +23,7 @@ public partial class MainMenuUI : Control
 
         if (_btnPlay     != null) _btnPlay.Pressed     += OnPlayPressed;
         if (_btnCareer   != null) _btnCareer.Pressed   += OnCareerPressed;
+        if (_btnEditor   != null) _btnEditor.Pressed   += OnEditorPressed;
         if (_btnSettings != null) _btnSettings.Pressed += OnSettingsPressed;
         if (_btnQuit     != null) _btnQuit.Pressed     += OnQuitPressed;
     }
@@ -36,6 +38,12 @@ public partial class MainMenuUI : Control
     {
         var gsm = GetNodeOrNull<GameStateManager>("/root/GameStateManager");
         gsm?.GoTo(GameStateManager.GameState.CareerSetup);
+    }
+
+    private void OnEditorPressed()
+    {
+        var gsm = GetNodeOrNull<GameStateManager>("/root/GameStateManager");
+        gsm?.GoTo(GameStateManager.GameState.EditorHub);
     }
 
     private void OnSettingsPressed()

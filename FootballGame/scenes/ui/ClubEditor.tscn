@@ -1,0 +1,220 @@
+[gd_scene load_steps=2 format=3 uid="uid://clubeditor001"]
+
+[ext_resource type="Script" path="res://scripts/ui/ClubEditorUI.cs" id="1_cedit"]
+
+[node name="ClubEditor" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource("1_cedit")
+_editShortName = NodePath("Main/Body/Left/FormGrid/EditShortName")
+_editFullName = NodePath("Main/Body/Left/FormGrid/EditFullName")
+_editCountry = NodePath("Main/Body/Left/FormGrid/EditCountry")
+_pickPrimary = NodePath("Main/Body/Left/FormGrid/PickPrimary")
+_pickSecondary = NodePath("Main/Body/Left/FormGrid/PickSecondary")
+_spinOverall = NodePath("Main/Body/Left/FormGrid/SpinOverall")
+_kitPreview = NodePath("Main/Body/Left/PreviewRow/KitPreview")
+_squadList = NodePath("Main/Body/Right/Scroll/SquadList")
+_lblSquadInfo = NodePath("Main/Body/Right/LblSquadInfo")
+_optSaved = NodePath("Main/Body/Left/SavedRow/OptSaved")
+_btnGenerateSquad = NodePath("Main/Body/Right/SquadButtons/BtnGenerateSquad")
+_btnAddPlayer = NodePath("Main/Body/Right/SquadButtons/BtnAddPlayer")
+_btnSave = NodePath("Main/Body/Left/SaveRow/BtnSave")
+_btnLoad = NodePath("Main/Body/Left/SavedRow/BtnLoad")
+_btnDelete = NodePath("Main/Body/Left/SavedRow/BtnDelete")
+_btnNew = NodePath("Main/Body/Left/SaveRow/BtnNew")
+_btnBack = NodePath("Main/Footer/BtnBack")
+_lblStatus = NodePath("Main/Footer/LblStatus")
+
+[node name="Background" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color(0.06, 0.1, 0.17, 1)
+
+[node name="Main" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 24.0
+offset_top = 16.0
+offset_right = -24.0
+offset_bottom = -16.0
+theme_override_constants/separation = 12
+
+[node name="LblTitle" type="Label" parent="Main"]
+layout_mode = 2
+text = "EDITOR DE CLUBE"
+theme_override_font_sizes/font_size = 28
+
+[node name="Body" type="HBoxContainer" parent="Main"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 24
+
+[node name="Left" type="VBoxContainer" parent="Main/Body"]
+layout_mode = 2
+custom_minimum_size = Vector2(400, 0)
+theme_override_constants/separation = 10
+
+[node name="FormGrid" type="GridContainer" parent="Main/Body/Left"]
+layout_mode = 2
+theme_override_constants/h_separation = 12
+theme_override_constants/v_separation = 8
+columns = 2
+
+[node name="LblShortName" type="Label" parent="Main/Body/Left/FormGrid"]
+layout_mode = 2
+text = "Nome curto"
+
+[node name="EditShortName" type="LineEdit" parent="Main/Body/Left/FormGrid"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="LblFullName" type="Label" parent="Main/Body/Left/FormGrid"]
+layout_mode = 2
+text = "Nome completo"
+
+[node name="EditFullName" type="LineEdit" parent="Main/Body/Left/FormGrid"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="LblCountry" type="Label" parent="Main/Body/Left/FormGrid"]
+layout_mode = 2
+text = "País"
+
+[node name="EditCountry" type="LineEdit" parent="Main/Body/Left/FormGrid"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="LblPrimary" type="Label" parent="Main/Body/Left/FormGrid"]
+layout_mode = 2
+text = "Cor primária"
+
+[node name="PickPrimary" type="ColorPickerButton" parent="Main/Body/Left/FormGrid"]
+layout_mode = 2
+size_flags_horizontal = 3
+custom_minimum_size = Vector2(0, 32)
+color = Color(0.2, 0.5, 0.9, 1)
+
+[node name="LblSecondary" type="Label" parent="Main/Body/Left/FormGrid"]
+layout_mode = 2
+text = "Cor secundária"
+
+[node name="PickSecondary" type="ColorPickerButton" parent="Main/Body/Left/FormGrid"]
+layout_mode = 2
+size_flags_horizontal = 3
+custom_minimum_size = Vector2(0, 32)
+color = Color(1, 1, 1, 1)
+
+[node name="LblOverall" type="Label" parent="Main/Body/Left/FormGrid"]
+layout_mode = 2
+text = "Overall base"
+
+[node name="SpinOverall" type="SpinBox" parent="Main/Body/Left/FormGrid"]
+layout_mode = 2
+min_value = 40.0
+max_value = 95.0
+value = 70.0
+
+[node name="PreviewRow" type="HBoxContainer" parent="Main/Body/Left"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="LblPreview" type="Label" parent="Main/Body/Left/PreviewRow"]
+layout_mode = 2
+text = "Uniforme:"
+
+[node name="KitPreview" type="ColorRect" parent="Main/Body/Left/PreviewRow"]
+layout_mode = 2
+custom_minimum_size = Vector2(120, 48)
+color = Color(0.2, 0.5, 0.9, 1)
+
+[node name="SaveRow" type="HBoxContainer" parent="Main/Body/Left"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="BtnNew" type="Button" parent="Main/Body/Left/SaveRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Novo"
+
+[node name="BtnSave" type="Button" parent="Main/Body/Left/SaveRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Salvar"
+
+[node name="SavedRow" type="HBoxContainer" parent="Main/Body/Left"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="OptSaved" type="OptionButton" parent="Main/Body/Left/SavedRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="BtnLoad" type="Button" parent="Main/Body/Left/SavedRow"]
+layout_mode = 2
+text = "Carregar"
+
+[node name="BtnDelete" type="Button" parent="Main/Body/Left/SavedRow"]
+layout_mode = 2
+text = "Excluir"
+
+[node name="Right" type="VBoxContainer" parent="Main/Body"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 8
+
+[node name="LblSquad" type="Label" parent="Main/Body/Right"]
+layout_mode = 2
+text = "Elenco"
+theme_override_font_sizes/font_size = 18
+
+[node name="SquadButtons" type="HBoxContainer" parent="Main/Body/Right"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="BtnGenerateSquad" type="Button" parent="Main/Body/Right/SquadButtons"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Gerar 11 (4-3-3)"
+
+[node name="BtnAddPlayer" type="Button" parent="Main/Body/Right/SquadButtons"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Adicionar jogador"
+
+[node name="LblSquadInfo" type="Label" parent="Main/Body/Right"]
+layout_mode = 2
+text = "Elenco vazio — gere ou adicione jogadores."
+theme_override_font_sizes/font_size = 13
+
+[node name="Scroll" type="ScrollContainer" parent="Main/Body/Right"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="SquadList" type="VBoxContainer" parent="Main/Body/Right/Scroll"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 4
+
+[node name="Footer" type="HBoxContainer" parent="Main"]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="BtnBack" type="Button" parent="Main/Footer"]
+layout_mode = 2
+custom_minimum_size = Vector2(140, 44)
+text = "Voltar"
+theme_override_font_sizes/font_size = 16
+
+[node name="LblStatus" type="Label" parent="Main/Footer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 1
+text = ""
+vertical_alignment = 1
+theme_override_font_sizes/font_size = 14
