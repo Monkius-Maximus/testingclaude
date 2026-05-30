@@ -81,29 +81,41 @@ Bate com os placeholders de `Player.tscn`/`Goalkeeper.tscn` (cápsula de
 | Largura de ombros | ~0.45 m |
 | **Pivô / origem do modelo** | **entre os pés, no chão (Y = 0)** |
 | Orientação "frente" | olhando para **+Z** na pose de bind |
-| Polígonos (alvo gameplay) | 8k–15k tris por jogador |
 
-### 4.1 Rig / Esqueleto
+### 4.1 LODs (Level of Detail)
+
+| LOD | Polígonos (tris) | Distância de switch | Uso |
+|---|---|---|---|
+| **LOD 0** | **8k–15k** | 0 – 20 m | Jogador em foco, câmera próxima |
+| **LOD 1** | **2k–4k** | 20 – 50 m | Jogadores no campo, câmera normal |
+| **LOD 2** | **300–600** | 50+ m | Substitutos no banco, perspectiva aérea |
+| **Shadow mesh** | **200–400** | todos | Sombra projetada (só silhueta) |
+
+O Godot 4 usa `VisibilityNotifier3D` + LODs automáticos em `.glb` quando o modelo
+é exportado com LODs no mesmo arquivo (nomes `_lod1`, `_lod2` no Blender/Maya).
+
+### 4.2 Rig / Esqueleto
 - Use **esqueleto humanoide compatível com Mixamo** (mesma nomenclatura de
   bones). O `PlayerAnimator.cs` espera um `AnimationTree` com uma máquina de
   estados; quanto mais padrão o rig, mais direto o retarget.
 - **Root motion desligado** — o movimento é dirigido por código
   (`Player.ExecuteIntentions`). As animações devem ser "in place".
+- Goleiro precisa de bones extras: `Glove_L`, `Glove_R` (para luvas).
 
-### 4.2 Animações necessárias (nomes esperados pelo código)
+### 4.3 Animações necessárias (nomes esperados pelo código)
 O `PlayerAnimator.cs` e o `CinematicDirector.cs` referenciam estes estados:
 
-| Estado/clip | Tipo | Usado por |
-|---|---|---|
-| `Idle` | loop | locomoção parada |
-| `Locomotion` (BlendSpace2D) | loop | andar/correr direcionais |
-| `Sprint` | loop | corrida máxima |
-| `Kick` | one-shot | `PlayKick()` |
-| `SlideTackle` | one-shot | `PlaySlideTackle()` |
-| `Header` | one-shot | `PlayHeader()` |
-| `Stumble` | one-shot | `PlayStumble()` (quem sofre o gol) |
-| `Celebrate` | one-shot | `PlayCelebrate()` (quem marca) |
-| `Dive` | one-shot | `PlayDive()` (goleiro) |
+| Estado/clip | Tipo | Duração aprox. | Usado por |
+|---|---|---|---|
+| `Idle` | loop | — | locomoção parada |
+| `Locomotion` (BlendSpace2D) | loop | — | andar/correr direcionais |
+| `Sprint` | loop | — | corrida máxima |
+| `Kick` | one-shot | 0.5–0.8 s | `PlayKick()` |
+| `SlideTackle` | one-shot | 0.8–1.0 s | `PlaySlideTackle()` |
+| `Header` | one-shot | 0.6–0.8 s | `PlayHeader()` |
+| `Stumble` | one-shot | 0.6 s | `PlayStumble()` (quem sofre o gol) |
+| `Celebrate` | one-shot | 2–3 s | `PlayCelebrate()` (quem marca) |
+| `Dive` | one-shot | 0.5–0.7 s | `PlayDive()` (goleiro) |
 
 > As one-shot precisam de um **Method Track** no último frame chamando
 > `OnActionFinished()` (já implementado), senão a locomoção não retorna.
@@ -116,16 +128,21 @@ O `PlayerAnimator.cs` e o `CinematicDirector.cs` referenciam estes estados:
 
 ## 5. Uniformes / Texturas de jogador
 
-| Asset | Resolução | Formato |
-|---|---|---|
-| Textura de corpo/uniforme (albedo) | 2048×2048 | PNG ou WebP |
-| Normal map | 2048×2048 | PNG |
-| ORM (occlusion/rough/metal) | 1024×1024 | PNG |
+| Asset | Resolução | Canais | Observação |
+|---|---|---|---|
+| `kit_base_mask.png` | **1024×1024** | RGB | Máscara do KitShader (ver guia de modulares) |
+| Face texture (`face_01.png`...) | **512×512** | RGBA | 1 textura por variante de rosto (6 sugeridas) |
+| Normal map (corpo) | 1024×1024 | RG | Detalhes de tecido/músculo |
+| ORM (occlusion/rough/metal) | 512×512 | RGB | 1 arquivo = 3 mapas |
 
-Hoje o `MatchBootstrap.SetTeamColor()` aplica uma cor sólida de override (azul
-para casa, vermelho para visitante). Quando os uniformes texturizados chegarem,
-ele deve passar a **trocar a textura/material** em vez de só a cor — me avise e
-ajusto esse método.
+**Máscara `kit_base_mask.png` (como pintar):**
+- Canal **R = 0 (preto)** → zona fica com `PrimaryColor` do time
+- Canal **R = 127 (cinza)** → zona fica com `SecondaryColor`
+- Canal **R = 255 (branco)** → zona neutra (costura, logo, sola)
+- Canal **G** → pele humana (multiplicado pelo parâmetro `skin_tone`)
+
+Hoje o `MatchBootstrap.SetTeamColor()` aplica cor sólida (azul/vermelho).
+O sistema de KitShader substitui isso sem mudar o mesh — veja `docs/modular_assets_guide.md`.
 
 ---
 
