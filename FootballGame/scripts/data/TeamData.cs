@@ -1,5 +1,6 @@
 using Godot;
 using Godot.Collections;
+using System.Linq;
 
 namespace FootballGame;
 
@@ -25,6 +26,16 @@ public partial class TeamData : Resource
     /// <summary>Força geral 0..100 — usada para sortear adversários e calcular dificuldade.</summary>
     [Export] public int     OverallRating  = 70;
 
-    /// <summary>IDs dos jogadores no elenco.</summary>
+    /// <summary>IDs dos jogadores no elenco (legado — usado como fallback).</summary>
     [Export] public Array<string> SquadIds = new();
+
+    /// <summary>
+    /// Elenco completo com atributos individuais (11 jogadores em ordem de escalação).
+    /// Quando preenchido, substitui SquadIds como fonte de verdade.
+    /// </summary>
+    [Export] public Array<PlayerData> Squad = new();
+
+    /// <summary>Overall médio do elenco, calculado automaticamente se Squad estiver preenchido.</summary>
+    public int ComputedOverall()
+        => Squad.Count > 0 ? (int)Squad.Average(p => p.OverallRating) : OverallRating;
 }

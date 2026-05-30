@@ -100,15 +100,20 @@ public partial class AIBrain : Node
 
     private BTStatus AttackOrPass(AIBrain b, float dt)
     {
-        var goal = b.Blackboard.OpponentGoalPosition;
+        var   goal       = b.Blackboard.OpponentGoalPosition;
         float distToGoal = b.Player.GlobalPosition.DistanceTo(goal);
 
-        // Dentro da faixa de chute → atirar
-        if (distToGoal < 22f)
+        // Distância de chute escala com Shooting: 70→19m, 90→23m, 50→15m
+        float shootRange = 13f + b.Player.Shooting * 0.14f;
+
+        // Jogadores com Passing muito superior a Shooting preferem passar mesmo perto
+        bool prefersPass = b.Player.Passing > b.Player.Shooting + 12;
+
+        if (distToGoal < shootRange && !prefersPass)
         {
             b.Player.LookTarget        = goal;
             b.Player.IntendsToKick     = true;
-            b.Player.IntendedKickPower = Mathf.Clamp(1.2f - distToGoal / 35f, 0.5f, 1f);
+            b.Player.IntendedKickPower = Mathf.Clamp(1.2f - distToGoal / (shootRange * 1.5f), 0.5f, 1f);
             return BTStatus.Success;
         }
 
@@ -123,17 +128,21 @@ public partial class AIBrain : Node
             return BTStatus.Success;
         }
 
-        // Sem passe disponível: avança com a bola
+        // Sem passe: dribla em direção ao gol (Pace alto → sprint mais frequente)
         b.Player.IntendedMovement = (goal - b.Player.GlobalPosition).Normalized();
-        b.Player.IntendsToSprint  = distToGoal < 40f;
+        b.Player.IntendsToSprint  = distToGoal < 35f + b.Player.Pace * 0.1f;
         return BTStatus.Success;
     }
 
     private Player FindBestPassTarget(AIBrain b)
     {
-        var myPos    = b.Player.GlobalPosition;
-        var goal     = b.Blackboard.OpponentGoalPosition;
+        var   myPos  = b.Player.GlobalPosition;
+        var   goal   = b.Blackboard.OpponentGoalPosition;
         float myDist = myPos.DistanceTo(goal);
+
+        // Visão de passe: Passing alto enxerga alvos mais adiantados e sob pressão
+        float advanceThreshold = 4f + b.Player.Passing * 0.05f;   // 70→7.5m, 90→8.5m
+        float minPressure      = 3f - b.Player.Passing * 0.01f;   // 70→2.3m, 90→2.1m
 
         Player best      = null;
         float  bestScore = -1f;
@@ -145,23 +154,17 @@ public partial class AIBrain : Node
             if (mate.Team != b.Player.Team) continue;
 
             float mateDist = mate.GlobalPosition.DistanceTo(goal);
+            if (mateDist >= myDist - advanceThreshold) continue;
 
-            // Companheiro deve estar em posição mais avançada
-            if (mateDist >= myDist - 4f) continue;
-
-            // Adversário não pode estar muito próximo do alvo
             float pressure = NearestOpponentDist(b, mate.GlobalPosition);
-            if (pressure < 2.5f) continue;
+            if (pressure < minPressure) continue;
 
-            // Linha de passe não pode estar bloqueada
             if (IsPassLaneBlocked(b, myPos, mate.GlobalPosition)) continue;
 
-            float score = (myDist - mateDist) * 0.6f + pressure * 0.4f;
-            if (score > bestScore)
-            {
-                bestScore = score;
-                best      = mate;
-            }
+            // Bônus se o alvo é um avançado com Shooting alto
+            float shootBonus = mate.Shooting > 75 ? 8f : 0f;
+            float score = (myDist - mateDist) * 0.6f + pressure * 0.4f + shootBonus;
+            if (score > bestScore) { bestScore = score; best = mate; }
         }
         return best;
     }
@@ -222,8 +225,12 @@ public partial class AIBrain : Node
 
         var dir = target.GlobalPosition - b.Player.GlobalPosition;
         b.Player.IntendedMovement = dir.Normalized();
-        b.Player.IntendsToSprint  = true;
-        if (dir.Length() < 1.5f)
+        // Defending alto → sprinta para pressionar mesmo com stamina baixa
+        b.Player.IntendsToSprint = b.Player.CurrentStamina > 20f
+                                    || b.Player.Defending > 78;
+        // Carrinho: Defending alto tenta de um pouco mais longe
+        float tackleAttemptRange = 1.3f + b.Player.Defending * 0.008f;
+        if (dir.Length() < tackleAttemptRange)
             b.Player.IntendsToTackle = true;
         return BTStatus.Success;
     }

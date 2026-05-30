@@ -1,4 +1,194 @@
-[gd_resource type="TeamData" load_steps=1 format=3 uid="uid://teamhome00001"]
+[gd_resource type="TeamData" load_steps=13 format=3 uid="uid://teamhome00001"]
+
+[sub_resource type="PlayerData" id="pd_h00"]
+PlayerId = "home_gk"
+FullName = "Rafael Souza"
+ShortName = "R. Souza"
+Age = 29
+Nationality = "BR"
+Pace = 62
+Shooting = 38
+Passing = 63
+Dribbling = 55
+Defending = 68
+Physical = 76
+Heading = 65
+Reflexes = 82
+Diving = 80
+GkPositioning = 78
+OverallRating = 74
+Potential = 76
+MarketValue = 900000
+
+[sub_resource type="PlayerData" id="pd_h01"]
+PlayerId = "home_lb"
+FullName = "Lucas Ferreira"
+ShortName = "L. Ferreira"
+Age = 24
+Nationality = "BR"
+Pace = 79
+Shooting = 58
+Passing = 70
+Dribbling = 67
+Defending = 74
+Physical = 72
+Heading = 64
+OverallRating = 72
+Potential = 78
+MarketValue = 750000
+
+[sub_resource type="PlayerData" id="pd_h02"]
+PlayerId = "home_cb1"
+FullName = "Thiago Mendes"
+ShortName = "T. Mendes"
+Age = 28
+Nationality = "BR"
+Pace = 67
+Shooting = 48
+Passing = 65
+Dribbling = 54
+Defending = 83
+Physical = 81
+Heading = 84
+OverallRating = 72
+Potential = 74
+MarketValue = 800000
+
+[sub_resource type="PlayerData" id="pd_h03"]
+PlayerId = "home_cb2"
+FullName = "Anderson Costa"
+ShortName = "A. Costa"
+Age = 27
+Nationality = "BR"
+Pace = 70
+Shooting = 50
+Passing = 67
+Dribbling = 56
+Defending = 81
+Physical = 79
+Heading = 82
+OverallRating = 72
+Potential = 75
+MarketValue = 820000
+
+[sub_resource type="PlayerData" id="pd_h04"]
+PlayerId = "home_rb"
+FullName = "Mateus Lima"
+ShortName = "M. Lima"
+Age = 22
+Nationality = "BR"
+Pace = 77
+Shooting = 60
+Passing = 71
+Dribbling = 68
+Defending = 72
+Physical = 70
+Heading = 62
+OverallRating = 71
+Potential = 80
+MarketValue = 700000
+
+[sub_resource type="PlayerData" id="pd_h05"]
+PlayerId = "home_cm1"
+FullName = "Bruno Silva"
+ShortName = "B. Silva"
+Age = 25
+Nationality = "BR"
+Pace = 71
+Shooting = 67
+Passing = 81
+Dribbling = 76
+Defending = 72
+Physical = 74
+Heading = 70
+OverallRating = 73
+Potential = 80
+MarketValue = 950000
+
+[sub_resource type="PlayerData" id="pd_h06"]
+PlayerId = "home_cm2"
+FullName = "Diego Alves"
+ShortName = "D. Alves"
+Age = 30
+Nationality = "BR"
+Pace = 68
+Shooting = 63
+Passing = 79
+Dribbling = 71
+Defending = 78
+Physical = 77
+Heading = 73
+OverallRating = 73
+Potential = 74
+MarketValue = 870000
+
+[sub_resource type="PlayerData" id="pd_h07"]
+PlayerId = "home_cm3"
+FullName = "Felipe Santos"
+ShortName = "F. Santos"
+Age = 23
+Nationality = "BR"
+Pace = 73
+Shooting = 76
+Passing = 83
+Dribbling = 79
+Defending = 61
+Physical = 68
+Heading = 67
+OverallRating = 75
+Potential = 84
+MarketValue = 1200000
+
+[sub_resource type="PlayerData" id="pd_h08"]
+PlayerId = "home_lw"
+FullName = "Carlos Oliveira"
+ShortName = "C. Oliveira"
+Age = 21
+Nationality = "BR"
+Pace = 87
+Shooting = 73
+Passing = 74
+Dribbling = 84
+Defending = 52
+Physical = 66
+Heading = 60
+OverallRating = 74
+Potential = 88
+MarketValue = 1500000
+
+[sub_resource type="PlayerData" id="pd_h09"]
+PlayerId = "home_rw"
+FullName = "Victor Rocha"
+ShortName = "V. Rocha"
+Age = 26
+Nationality = "BR"
+Pace = 85
+Shooting = 75
+Passing = 72
+Dribbling = 82
+Defending = 50
+Physical = 65
+Heading = 58
+OverallRating = 74
+Potential = 77
+MarketValue = 1300000
+
+[sub_resource type="PlayerData" id="pd_h10"]
+PlayerId = "home_st"
+FullName = "Alexandre Gomes"
+ShortName = "A. Gomes"
+Age = 27
+Nationality = "BR"
+Pace = 82
+Shooting = 86
+Passing = 70
+Dribbling = 77
+Defending = 43
+Physical = 79
+Heading = 82
+OverallRating = 77
+Potential = 79
+MarketValue = 2500000
 
 [resource]
 TeamId = "team_home"
@@ -10,3 +200,4 @@ SecondaryColor = Color(1, 1, 1, 1)
 CrestPath = ""
 OverallRating = 75
 SquadIds = Array[String](["home_gk", "home_lb", "home_cb1", "home_cb2", "home_rb", "home_cm1", "home_cm2", "home_cm3", "home_lw", "home_rw", "home_st"])
+Squad = Array[Resource]([SubResource("pd_h00"), SubResource("pd_h01"), SubResource("pd_h02"), SubResource("pd_h03"), SubResource("pd_h04"), SubResource("pd_h05"), SubResource("pd_h06"), SubResource("pd_h07"), SubResource("pd_h08"), SubResource("pd_h09"), SubResource("pd_h10")])

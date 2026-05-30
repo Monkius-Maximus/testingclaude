@@ -57,8 +57,10 @@ public partial class CareerManager : Node
     public bool       HasCareer       => Current != null;
     public bool       IsAwaitingResult { get; set; } = false;
 
-    private readonly Dictionary<string, TeamData> _teamCache = new();
-    private readonly JsonSerializerOptions        _jsonOpts  = new() { WriteIndented = false };
+    private readonly Dictionary<string, TeamData>    _teamCache   = new();
+    // Squads gerados para times fantasma (não persistidos no .json, gerados novo a cada boot)
+    private readonly Dictionary<string, TeamData>    _ghostTeams  = new();
+    private readonly JsonSerializerOptions           _jsonOpts    = new() { WriteIndented = false };
 
     public override void _Ready()
     {
@@ -120,12 +122,41 @@ public partial class CareerManager : Node
         Save();
     }
 
-    /// <summary>Retorna TeamData para o ID dado (usa cache interno).</summary>
+    /// <summary>
+    /// Retorna TeamData para o ID dado. Para times reais usa o cache de recursos;
+    /// para times fantasma cria um TeamData temporário com squad gerado.
+    /// </summary>
     public TeamData GetTeamData(string teamId)
     {
         if (_teamCache.TryGetValue(teamId, out var td)) return td;
         ScanTeams();
-        return _teamCache.GetValueOrDefault(teamId);
+        if (_teamCache.TryGetValue(teamId, out td)) return td;
+
+        // Time fantasma: cria um TeamData com squad procedural e armazena para reutilização
+        if (!_ghostTeams.TryGetValue(teamId, out td))
+        {
+            int overall = 60 + new Random().Next(0, 20);
+            td = new TeamData
+            {
+                TeamId        = teamId,
+                ShortName     = GhostTeamLabel(teamId),
+                OverallRating = overall
+            };
+            // Gera 11 jogadores com as funções da formação 4-3-3 padrão
+            var lineup = GD.Load<Lineup>("res://resources/lineups/lineup_433.tres");
+            if (lineup != null)
+                foreach (var role in lineup.Roles)
+                    td.Squad.Add(PlayerGenerator.Create(role, overall, teamId, td.Squad.Count));
+            _ghostTeams[teamId] = td;
+        }
+        return td;
+    }
+
+    private static string GhostTeamLabel(string teamId)
+    {
+        if (teamId.StartsWith("ghost_") && int.TryParse(teamId.Replace("ghost_", ""), out int n))
+            return $"Time {(char)('C' + n)}";
+        return teamId;
     }
 
     // ── Geração de temporada ─────────────────────────────────────────────────

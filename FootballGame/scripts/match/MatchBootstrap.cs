@@ -117,7 +117,9 @@ public partial class MatchBootstrap : Node
             ? GetNodeOrNull<Area3D>(_penaltyAreaAPath)
             : GetNodeOrNull<Area3D>(_penaltyAreaBPath);
 
-        int count = Mathf.Min(lineup.Roles.Count, KickoffPositionsTeam0.Length);
+        int count      = Mathf.Min(lineup.Roles.Count, KickoffPositionsTeam0.Length);
+        var teamData   = team == 0 ? HomeTeamData : AwayTeamData;
+        int teamOverall = teamData?.OverallRating ?? 70;
 
         for (int i = 0; i < count; i++)
         {
@@ -135,6 +137,12 @@ public partial class MatchBootstrap : Node
             player.Team     = team;
             player.PlayerId = i < lineup.PlayerIds.Count ? lineup.PlayerIds[i] : $"p{team}_{i}";
             player.Role     = role;
+
+            // Squad preenchido → usa dados reais; senão → geração procedural baseada no overall do time
+            var playerData = (teamData?.Squad != null && i < teamData.Squad.Count)
+                ? teamData.Squad[i]
+                : PlayerGenerator.Create(role, teamOverall, teamData?.TeamId ?? $"t{team}", i);
+            player.ApplyStats(playerData);
 
             var pos = KickoffPositionsTeam0[i];
             player.Position = mirrorX ? new Vector3(-pos.X, pos.Y, -pos.Z) : pos;
