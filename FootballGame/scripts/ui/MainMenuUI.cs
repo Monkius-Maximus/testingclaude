@@ -10,6 +10,7 @@ public partial class MainMenuUI : Control
     private const string GameVersion = "0.1.0-dev";
 
     [Export] private Button _btnPlay;
+    [Export] private Button _btnCareer;
     [Export] private Button _btnSettings;
     [Export] private Button _btnQuit;
     [Export] private Label  _lblVersion;
@@ -20,6 +21,7 @@ public partial class MainMenuUI : Control
             _lblVersion.Text = $"v{GameVersion}";
 
         if (_btnPlay     != null) _btnPlay.Pressed     += OnPlayPressed;
+        if (_btnCareer   != null) _btnCareer.Pressed   += OnCareerPressed;
         if (_btnSettings != null) _btnSettings.Pressed += OnSettingsPressed;
         if (_btnQuit     != null) _btnQuit.Pressed     += OnQuitPressed;
     }
@@ -28,6 +30,12 @@ public partial class MainMenuUI : Control
     {
         var gsm = GetNodeOrNull<GameStateManager>("/root/GameStateManager");
         gsm?.GoTo(GameStateManager.GameState.TeamSelect);
+    }
+
+    private void OnCareerPressed()
+    {
+        var gsm = GetNodeOrNull<GameStateManager>("/root/GameStateManager");
+        gsm?.GoTo(GameStateManager.GameState.CareerSetup);
     }
 
     private void OnSettingsPressed()

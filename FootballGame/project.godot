@@ -20,6 +20,7 @@ run/main_scene="res://scenes/ui/MainMenu.tscn"
 
 GameManager="*res://scripts/core/GameManager.cs"
 GameStateManager="*res://scripts/core/GameStateManager.cs"
+CareerManager="*res://scripts/core/CareerManager.cs"
 
 [dotnet]
 

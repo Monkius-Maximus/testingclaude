@@ -1,0 +1,85 @@
+[gd_scene load_steps=2 format=3 uid="uid://careersetup001"]
+
+[ext_resource type="Script" path="res://scripts/ui/CareerSetupUI.cs" id="1_careersetupcs"]
+
+[node name="CareerSetup" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource("1_careersetupcs")
+_teamOption = NodePath("Center/VBox/TeamOption")
+_btnStart = NodePath("Center/VBox/BtnStart")
+_btnContinue = NodePath("Center/VBox/BtnContinue")
+_btnDelete = NodePath("Center/VBox/BtnDelete")
+_btnBack = NodePath("Center/VBox/BtnBack")
+_lblStatus = NodePath("Center/VBox/LblStatus")
+
+[node name="Background" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color(0.06, 0.1, 0.16, 1)
+
+[node name="Center" type="CenterContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="VBox" type="VBoxContainer" parent="Center"]
+layout_mode = 2
+custom_minimum_size = Vector2(380, 0)
+theme_override_constants/separation = 18
+
+[node name="LblTitle" type="Label" parent="Center/VBox"]
+layout_mode = 2
+text = "MODO CARREIRA"
+horizontal_alignment = 1
+theme_override_font_sizes/font_size = 40
+
+[node name="LblStatus" type="Label" parent="Center/VBox"]
+layout_mode = 2
+text = "Nenhuma carreira salva."
+horizontal_alignment = 1
+theme_override_font_sizes/font_size = 16
+
+[node name="Separator1" type="HSeparator" parent="Center/VBox"]
+layout_mode = 2
+
+[node name="LblChoose" type="Label" parent="Center/VBox"]
+layout_mode = 2
+text = "Escolha seu time:"
+theme_override_font_sizes/font_size = 18
+
+[node name="TeamOption" type="OptionButton" parent="Center/VBox"]
+layout_mode = 2
+custom_minimum_size = Vector2(380, 48)
+theme_override_font_sizes/font_size = 18
+
+[node name="BtnStart" type="Button" parent="Center/VBox"]
+layout_mode = 2
+custom_minimum_size = Vector2(380, 52)
+text = "Nova Carreira"
+theme_override_font_sizes/font_size = 22
+
+[node name="BtnContinue" type="Button" parent="Center/VBox"]
+layout_mode = 2
+custom_minimum_size = Vector2(380, 52)
+text = "Continuar Carreira"
+theme_override_font_sizes/font_size = 22
+visible = false
+
+[node name="BtnDelete" type="Button" parent="Center/VBox"]
+layout_mode = 2
+custom_minimum_size = Vector2(380, 44)
+text = "Apagar Carreira Salva"
+theme_override_font_sizes/font_size = 16
+visible = false
+
+[node name="BtnBack" type="Button" parent="Center/VBox"]
+layout_mode = 2
+custom_minimum_size = Vector2(380, 44)
+text = "Voltar"
+theme_override_font_sizes/font_size = 18

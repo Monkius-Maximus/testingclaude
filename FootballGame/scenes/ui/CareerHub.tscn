@@ -1,0 +1,113 @@
+[gd_scene load_steps=2 format=3 uid="uid://careerhub001"]
+
+[ext_resource type="Script" path="res://scripts/ui/CareerHubUI.cs" id="1_careerhubcs"]
+
+[node name="CareerHub" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource("1_careerhubcs")
+_lblTeam = NodePath("Main/Header/LblTeam")
+_lblSeason = NodePath("Main/Header/LblSeason")
+_lblBalance = NodePath("Main/Header/LblBalance")
+_lblNextMatch = NodePath("Main/NextMatch/LblNextMatch")
+_btnPlayNext = NodePath("Main/NextMatch/BtnPlayNext")
+_btnMainMenu = NodePath("Main/Footer/BtnMainMenu")
+_standingsContainer = NodePath("Main/Standings/StandingsScroll/StandingsVBox")
+
+[node name="Background" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color(0.06, 0.1, 0.16, 1)
+
+[node name="Main" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 32.0
+offset_top = 24.0
+offset_right = -32.0
+offset_bottom = -24.0
+theme_override_constants/separation = 16
+
+[node name="Header" type="HBoxContainer" parent="Main"]
+layout_mode = 2
+theme_override_constants/separation = 32
+
+[node name="LblTeam" type="Label" parent="Main/Header"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Time: —"
+theme_override_font_sizes/font_size = 28
+
+[node name="LblSeason" type="Label" parent="Main/Header"]
+layout_mode = 2
+text = "Temporada 1"
+theme_override_font_sizes/font_size = 22
+
+[node name="LblBalance" type="Label" parent="Main/Header"]
+layout_mode = 2
+text = "Caixa: R$ 0"
+theme_override_font_sizes/font_size = 18
+horizontal_alignment = 2
+
+[node name="Separator1" type="HSeparator" parent="Main"]
+layout_mode = 2
+
+[node name="LblTableTitle" type="Label" parent="Main"]
+layout_mode = 2
+text = "CLASSIFICAÇÃO"
+theme_override_font_sizes/font_size = 20
+
+[node name="Standings" type="VBoxContainer" parent="Main"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 0
+
+[node name="StandingsScroll" type="ScrollContainer" parent="Main/Standings"]
+layout_mode = 2
+size_flags_vertical = 3
+custom_minimum_size = Vector2(0, 200)
+
+[node name="StandingsVBox" type="VBoxContainer" parent="Main/Standings/StandingsScroll"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 2
+
+[node name="Separator2" type="HSeparator" parent="Main"]
+layout_mode = 2
+
+[node name="NextMatch" type="VBoxContainer" parent="Main"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="LblNextMatchTitle" type="Label" parent="Main/NextMatch"]
+layout_mode = 2
+text = "PRÓXIMA PARTIDA"
+theme_override_font_sizes/font_size = 18
+
+[node name="LblNextMatch" type="Label" parent="Main/NextMatch"]
+layout_mode = 2
+text = "—"
+horizontal_alignment = 1
+theme_override_font_sizes/font_size = 22
+
+[node name="BtnPlayNext" type="Button" parent="Main/NextMatch"]
+layout_mode = 2
+custom_minimum_size = Vector2(0, 56)
+text = "Jogar Próxima Partida"
+theme_override_font_sizes/font_size = 22
+
+[node name="Footer" type="HBoxContainer" parent="Main"]
+layout_mode = 2
+alignment = 1
+
+[node name="BtnMainMenu" type="Button" parent="Main/Footer"]
+layout_mode = 2
+custom_minimum_size = Vector2(220, 48)
+text = "Menu Principal"
+theme_override_font_sizes/font_size = 18

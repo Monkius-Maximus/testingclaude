@@ -9,6 +9,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 script = ExtResource("1_mainmenucs")
 _btnPlay = NodePath("Center/VBox/BtnPlay")
+_btnCareer = NodePath("Center/VBox/BtnCareer")
 _btnSettings = NodePath("Center/VBox/BtnSettings")
 _btnQuit = NodePath("Center/VBox/BtnQuit")
 _lblVersion = NodePath("LblVersion")
@@ -40,7 +41,13 @@ theme_override_font_sizes/font_size = 48
 [node name="BtnPlay" type="Button" parent="Center/VBox"]
 layout_mode = 2
 custom_minimum_size = Vector2(300, 52)
-text = "Jogar"
+text = "Partida Rápida"
+theme_override_font_sizes/font_size = 22
+
+[node name="BtnCareer" type="Button" parent="Center/VBox"]
+layout_mode = 2
+custom_minimum_size = Vector2(300, 52)
+text = "Modo Carreira"
 theme_override_font_sizes/font_size = 22
 
 [node name="BtnSettings" type="Button" parent="Center/VBox"]

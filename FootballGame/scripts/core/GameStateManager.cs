@@ -18,7 +18,9 @@ public partial class GameStateManager : Node
         Match,
         Paused,
         HalfTime,
-        Result
+        Result,
+        CareerSetup,
+        CareerHub
     }
 
     public struct MatchResult
@@ -30,11 +32,13 @@ public partial class GameStateManager : Node
     }
 
     // ── Caminhos de cena ──────────────────────────────────────────
-    private const string SceneMainMenu   = "res://scenes/ui/MainMenu.tscn";
-    private const string SceneTeamSelect = "res://scenes/ui/TeamSelect.tscn";
-    private const string SceneSettings   = "res://scenes/ui/Settings.tscn";
-    private const string SceneMatch      = "res://scenes/match/Match.tscn";
-    private const string SceneResult     = "res://scenes/ui/Result.tscn";
+    private const string SceneMainMenu    = "res://scenes/ui/MainMenu.tscn";
+    private const string SceneTeamSelect  = "res://scenes/ui/TeamSelect.tscn";
+    private const string SceneSettings    = "res://scenes/ui/Settings.tscn";
+    private const string SceneMatch       = "res://scenes/match/Match.tscn";
+    private const string SceneResult      = "res://scenes/ui/Result.tscn";
+    private const string SceneCareerSetup = "res://scenes/ui/CareerSetup.tscn";
+    private const string SceneCareerHub   = "res://scenes/ui/CareerHub.tscn";
 
     [Signal] public delegate void StateChangedEventHandler(int previous, int next);
 
@@ -79,6 +83,12 @@ public partial class GameStateManager : Node
             // (ver MatchBootstrap.OnHalfTime), não como troca de cena.
             case GameState.Result:
                 GetTree().ChangeSceneToFile(SceneResult);
+                break;
+            case GameState.CareerSetup:
+                GetTree().ChangeSceneToFile(SceneCareerSetup);
+                break;
+            case GameState.CareerHub:
+                GetTree().ChangeSceneToFile(SceneCareerHub);
                 break;
         }
     }

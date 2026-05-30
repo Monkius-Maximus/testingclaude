@@ -12,6 +12,7 @@ _lblScore = NodePath("Center/VBox/LblScore")
 _lblMode = NodePath("Center/VBox/LblMode")
 _lblTime = NodePath("Center/VBox/LblTime")
 _btnPlayAgain = NodePath("Center/VBox/Buttons/BtnPlayAgain")
+_btnCareerHub = NodePath("Center/VBox/Buttons/BtnCareerHub")
 _btnMainMenu = NodePath("Center/VBox/Buttons/BtnMainMenu")
 
 [node name="Background" type="ColorRect" parent="."]
@@ -66,6 +67,13 @@ layout_mode = 2
 custom_minimum_size = Vector2(200, 56)
 text = "Jogar Novamente"
 theme_override_font_sizes/font_size = 20
+
+[node name="BtnCareerHub" type="Button" parent="Center/VBox/Buttons"]
+layout_mode = 2
+custom_minimum_size = Vector2(200, 56)
+text = "Continuar Carreira"
+theme_override_font_sizes/font_size = 20
+visible = false
 
 [node name="BtnMainMenu" type="Button" parent="Center/VBox/Buttons"]
 layout_mode = 2
