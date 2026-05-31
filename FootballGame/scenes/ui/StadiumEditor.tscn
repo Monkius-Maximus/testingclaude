@@ -1,0 +1,239 @@
+[gd_scene load_steps=3 format=3 uid="uid://stadiumedit01"]
+
+[ext_resource type="Script" path="res://scripts/ui/StadiumEditorUI.cs"   id="1_sedit"]
+[ext_resource type="Script" path="res://scripts/ui/StadiumPreviewUI.cs"  id="2_spreview"]
+
+[node name="StadiumEditor" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource("1_sedit")
+_editName       = NodePath("Main/Body/Left/FormGrid/EditName")
+_editCity       = NodePath("Main/Body/Left/FormGrid/EditCity")
+_spinYear       = NodePath("Main/Body/Left/FormGrid/SpinYear")
+_pickPitch      = NodePath("Main/Body/Left/FormGrid/PickPitch")
+_pickStand      = NodePath("Main/Body/Left/FormGrid/PickStand")
+_preview        = NodePath("Main/Body/Right/Preview")
+_lblCapacity    = NodePath("Main/Body/Right/LblCapacity")
+_lblSlotInfo    = NodePath("Main/Body/Right/LblSlotInfo")
+_optSaved       = NodePath("Main/Body/Left/SavedRow/OptSaved")
+_btnPresetEmpty  = NodePath("Main/Body/Left/Presets/BtnPresetEmpty")
+_btnPresetSmall  = NodePath("Main/Body/Left/Presets/BtnPresetSmall")
+_btnPresetMedium = NodePath("Main/Body/Left/Presets/BtnPresetMedium")
+_btnPresetLarge  = NodePath("Main/Body/Left/Presets/BtnPresetLarge")
+_btnSelectAll   = NodePath("Main/Body/Left/MassButtons/BtnSelectAll")
+_btnDeselectAll = NodePath("Main/Body/Left/MassButtons/BtnDeselectAll")
+_btnNew         = NodePath("Main/Body/Left/SaveRow/BtnNew")
+_btnSave        = NodePath("Main/Body/Left/SaveRow/BtnSave")
+_btnLoad        = NodePath("Main/Body/Left/SavedRow/BtnLoad")
+_btnDelete      = NodePath("Main/Body/Left/SavedRow/BtnDelete")
+_btnBack        = NodePath("Main/Footer/BtnBack")
+_lblStatus      = NodePath("Main/Footer/LblStatus")
+
+[node name="Background" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color(0.06, 0.10, 0.17, 1)
+
+[node name="Main" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 24.0
+offset_top = 14.0
+offset_right = -24.0
+offset_bottom = -14.0
+theme_override_constants/separation = 10
+
+[node name="LblTitle" type="Label" parent="Main"]
+layout_mode = 2
+text = "EDITOR DE ESTÁDIO"
+theme_override_font_sizes/font_size = 28
+
+[node name="Body" type="HBoxContainer" parent="Main"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 20
+
+; ─── Painel esquerdo: formulário + CRUD ───────────────────────────────────
+[node name="Left" type="VBoxContainer" parent="Main/Body"]
+layout_mode = 2
+custom_minimum_size = Vector2(360, 0)
+theme_override_constants/separation = 8
+
+[node name="FormGrid" type="GridContainer" parent="Main/Body/Left"]
+layout_mode = 2
+columns = 2
+theme_override_constants/h_separation = 12
+theme_override_constants/v_separation = 8
+
+[node name="LblName" type="Label" parent="Main/Body/Left/FormGrid"]
+layout_mode = 2
+text = "Nome"
+
+[node name="EditName" type="LineEdit" parent="Main/Body/Left/FormGrid"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="LblCity" type="Label" parent="Main/Body/Left/FormGrid"]
+layout_mode = 2
+text = "Cidade"
+
+[node name="EditCity" type="LineEdit" parent="Main/Body/Left/FormGrid"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="LblYear" type="Label" parent="Main/Body/Left/FormGrid"]
+layout_mode = 2
+text = "Ano de fundação"
+
+[node name="SpinYear" type="SpinBox" parent="Main/Body/Left/FormGrid"]
+layout_mode = 2
+min_value = 1850.0
+max_value = 2100.0
+value = 2000.0
+
+[node name="LblPitch" type="Label" parent="Main/Body/Left/FormGrid"]
+layout_mode = 2
+text = "Cor do gramado"
+
+[node name="PickPitch" type="ColorPickerButton" parent="Main/Body/Left/FormGrid"]
+layout_mode = 2
+size_flags_horizontal = 3
+custom_minimum_size = Vector2(0, 32)
+color = Color(0.13, 0.55, 0.13, 1)
+
+[node name="LblStand" type="Label" parent="Main/Body/Left/FormGrid"]
+layout_mode = 2
+text = "Cor das tribunes"
+
+[node name="PickStand" type="ColorPickerButton" parent="Main/Body/Left/FormGrid"]
+layout_mode = 2
+size_flags_horizontal = 3
+custom_minimum_size = Vector2(0, 32)
+color = Color(0.28, 0.30, 0.36, 1)
+
+[node name="LblPresets" type="Label" parent="Main/Body/Left"]
+layout_mode = 2
+text = "Presets"
+theme_override_font_sizes/font_size = 15
+
+[node name="Presets" type="GridContainer" parent="Main/Body/Left"]
+layout_mode = 2
+columns = 2
+theme_override_constants/h_separation = 6
+theme_override_constants/v_separation = 6
+
+[node name="BtnPresetEmpty" type="Button" parent="Main/Body/Left/Presets"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Vazio"
+
+[node name="BtnPresetSmall" type="Button" parent="Main/Body/Left/Presets"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Pequeno"
+
+[node name="BtnPresetMedium" type="Button" parent="Main/Body/Left/Presets"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Médio"
+
+[node name="BtnPresetLarge" type="Button" parent="Main/Body/Left/Presets"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Grande (Completo)"
+
+[node name="MassButtons" type="HBoxContainer" parent="Main/Body/Left"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="BtnSelectAll" type="Button" parent="Main/Body/Left/MassButtons"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Ativar tudo"
+
+[node name="BtnDeselectAll" type="Button" parent="Main/Body/Left/MassButtons"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Desativar tudo"
+
+[node name="SaveRow" type="HBoxContainer" parent="Main/Body/Left"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="BtnNew" type="Button" parent="Main/Body/Left/SaveRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Novo"
+
+[node name="BtnSave" type="Button" parent="Main/Body/Left/SaveRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Salvar"
+
+[node name="SavedRow" type="HBoxContainer" parent="Main/Body/Left"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="OptSaved" type="OptionButton" parent="Main/Body/Left/SavedRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="BtnLoad" type="Button" parent="Main/Body/Left/SavedRow"]
+layout_mode = 2
+text = "Carregar"
+
+[node name="BtnDelete" type="Button" parent="Main/Body/Left/SavedRow"]
+layout_mode = 2
+text = "Excluir"
+
+; ─── Painel direito: preview canvas ───────────────────────────────────────
+[node name="Right" type="VBoxContainer" parent="Main/Body"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 8
+
+[node name="LblPreviewTitle" type="Label" parent="Main/Body/Right"]
+layout_mode = 2
+text = "Preview  —  clique em uma seção para ativar/desativar"
+theme_override_font_sizes/font_size = 14
+
+[node name="Preview" type="Control" parent="Main/Body/Right"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = ExtResource("2_spreview")
+
+[node name="LblCapacity" type="Label" parent="Main/Body/Right"]
+layout_mode = 2
+text = "Capacidade estimada: —"
+theme_override_font_sizes/font_size = 14
+
+[node name="LblSlotInfo" type="Label" parent="Main/Body/Right"]
+layout_mode = 2
+text = "Clique em uma seção para ativá-la ou desativá-la."
+theme_override_font_sizes/font_size = 13
+
+; ─── Rodapé ───────────────────────────────────────────────────────────────
+[node name="Footer" type="HBoxContainer" parent="Main"]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="BtnBack" type="Button" parent="Main/Footer"]
+layout_mode = 2
+custom_minimum_size = Vector2(140, 44)
+text = "Voltar"
+theme_override_font_sizes/font_size = 16
+
+[node name="LblStatus" type="Label" parent="Main/Footer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 1
+text = ""
+vertical_alignment = 1
+theme_override_font_sizes/font_size = 14

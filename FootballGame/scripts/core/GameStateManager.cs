@@ -24,7 +24,8 @@ public partial class GameStateManager : Node
         TransferMarket,
         EditorHub,
         PlayerEditor,
-        ClubEditor
+        ClubEditor,
+        StadiumEditor
     }
 
     public struct MatchResult
@@ -48,6 +49,7 @@ public partial class GameStateManager : Node
     private const string SceneEditorHub      = "res://scenes/ui/EditorHub.tscn";
     private const string ScenePlayerEditor   = "res://scenes/ui/PlayerEditor.tscn";
     private const string SceneClubEditor     = "res://scenes/ui/ClubEditor.tscn";
+    private const string SceneStadiumEditor  = "res://scenes/ui/StadiumEditor.tscn";
 
     [Signal] public delegate void StateChangedEventHandler(int previous, int next);
 
@@ -110,6 +112,9 @@ public partial class GameStateManager : Node
                 break;
             case GameState.ClubEditor:
                 GetTree().ChangeSceneToFile(SceneClubEditor);
+                break;
+            case GameState.StadiumEditor:
+                GetTree().ChangeSceneToFile(SceneStadiumEditor);
                 break;
         }
     }

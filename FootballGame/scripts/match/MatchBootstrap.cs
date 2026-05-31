@@ -58,6 +58,7 @@ public partial class MatchBootstrap : Node
         SpawnTeam(1, AwayLineup, true);
         SetupGoalPositions();
         SetupCinematicDirector();
+        ApplyStadium();
 
         var clock = GetNodeOrNull<MatchClock>("MatchClock");
         if (clock != null)
@@ -264,5 +265,17 @@ public partial class MatchBootstrap : Node
         foreach (var p in _allPlayers)
             paths.Add(p.GetPath());
         director.Set("_playerPaths", paths);
+    }
+
+    private void ApplyStadium()
+    {
+        var gm      = GetNodeOrNull<GameManager>("/root/GameManager");
+        var stadium = gm?.ActiveStadium;
+
+        // Tenta encontrar o nó Field (instanciado ou presente na árvore)
+        var field = GetNodeOrNull<Node3D>("Field");
+        if (field == null) return;
+
+        StadiumLoader.Apply(field, stadium);
     }
 }

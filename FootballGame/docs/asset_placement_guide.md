@@ -343,14 +343,34 @@ preview 3D em tempo real (`SubViewport` + futuro `PlayerVisuals.cs`).
 **Falta (quando houver assets):** preview do kit com o `KitShaderMaterial`
 real e importação de PNG como escudo via `FileDialog`.
 
-### Editor de Estádios — ⏳ FUTURO
-- Posicionar as peças modulares de estádio em grid
-- Definir capacidade, nome, e cidade
-- Salvar como recurso `.tres` de `StadiumData` (a criar)
+### Editor de Estádios — ✅ IMPLEMENTADO
 
-**Nós envolvidos:** `StadiumData.cs` (a criar), `Node3D` com peças modulares,
-`GridMap` ou posicionamento livre com snapping
+- Preview 2D top-down interativo com 12 slots clicáveis:
+  - 4 tribunes principais (NorthStand, SouthStand, WestEnd, EastEnd)
+  - 4 cantos (CornerNW/NE/SW/SE)
+  - 4 holofotes (FloodlightNW/NE/SW/SE)
+- Identidade: nome, cidade, ano de fundação
+- Cores: gramado (`PitchColor`) e arquibancada (`StandColor`) com preview ao vivo
+- Presets: Vazio / Pequeno (4 tribunes) / Médio (+ cantos) / Grande (tudo)
+- Capacidade estimada calculada automaticamente pelos slots ativos
+- Salva/carrega/exclui em `user://custom/stadiums/*.tres`
+- `StadiumLoader.cs` instancia os modelos na cena de partida via `MatchBootstrap`
+  quando os `.glb` estão presentes em `assets/models/stadium/` — silent no-op sem eles
 
-> O editor in-game é a etapa mais complexa. A base modular do código e dos
-> assets (especialmente kit shader + peças de estádio) deve estar sólida antes
-> de começar o editor, pois ele apenas expõe visualmente o que já existe em dados.
+**Arquivos:**
+- `scripts/data/StadiumData.cs` — Resource com SlotMask (12 bits), transforms 3D e caminhos de modelo
+- `scripts/ui/StadiumPreviewUI.cs` — canvas custom `_Draw()` + `_GuiInput()` interativo
+- `scripts/ui/StadiumEditorUI.cs` — lógica do editor
+- `scripts/match/StadiumLoader.cs` — instancia peças no nó `Field/StadiumVisuals`
+- `scenes/ui/StadiumEditor.tscn` — cena do editor
+
+**Modelos esperados** (quando prontos — o editor já funciona sem eles):
+```
+assets/models/stadium/
+├── bleacher_straight.glb   ← NorthStand, SouthStand, WestEnd, EastEnd
+├── bleacher_corner.glb     ← CornerNW/NE/SW/SE
+└── floodlight_mast.glb     ← FloodlightNW/NE/SW/SE
+```
+
+> O preview 3D real (SubViewport 3D com câmera ortográfica) e o snapping
+> por grid são melhorias futuras quando os modelos estiverem disponíveis.

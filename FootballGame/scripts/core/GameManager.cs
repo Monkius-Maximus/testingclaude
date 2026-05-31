@@ -13,10 +13,12 @@ public partial class GameManager : Node
 
     public MatchMode CurrentMode { get; set; } = MatchMode.Friendly;
 
-    public TeamData HomeTeam   { get; set; }
-    public TeamData AwayTeam   { get; set; }
-    public Lineup   HomeLineup { get; set; }
-    public Lineup   AwayLineup { get; set; }
+    public TeamData    HomeTeam      { get; set; }
+    public TeamData    AwayTeam      { get; set; }
+    public Lineup      HomeLineup    { get; set; }
+    public Lineup      AwayLineup    { get; set; }
+    /// <summary>Estádio customizado para a próxima partida. null = sem estádio visual.</summary>
+    public StadiumData ActiveStadium { get; set; }
 
     /// <summary>Multiplicador atual de XP (preenchido conforme a competição em curso).</summary>
     public float ExperienceMultiplier { get; set; } = 1f;

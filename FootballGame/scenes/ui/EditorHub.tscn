@@ -10,6 +10,7 @@ anchor_bottom = 1.0
 script = ExtResource("1_edhub")
 _btnPlayerEditor = NodePath("Center/VBox/BtnPlayerEditor")
 _btnClubEditor = NodePath("Center/VBox/BtnClubEditor")
+_btnStadiumEditor = NodePath("Center/VBox/BtnStadiumEditor")
 _btnBack = NodePath("Center/VBox/BtnBack")
 _lblCounts = NodePath("Center/VBox/LblCounts")
 
@@ -53,6 +54,12 @@ theme_override_font_sizes/font_size = 22
 layout_mode = 2
 custom_minimum_size = Vector2(340, 52)
 text = "Editor de Clube"
+theme_override_font_sizes/font_size = 22
+
+[node name="BtnStadiumEditor" type="Button" parent="Center/VBox"]
+layout_mode = 2
+custom_minimum_size = Vector2(340, 52)
+text = "Editor de Estádio"
 theme_override_font_sizes/font_size = 22
 
 [node name="BtnBack" type="Button" parent="Center/VBox"]

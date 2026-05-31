@@ -10,14 +10,16 @@ namespace FootballGame;
 /// </summary>
 public static class CustomContent
 {
-    public const string PlayersDir = "user://custom/players/";
-    public const string TeamsDir   = "user://custom/teams/";
+    public const string PlayersDir  = "user://custom/players/";
+    public const string TeamsDir    = "user://custom/teams/";
+    public const string StadiumsDir = "user://custom/stadiums/";
 
     /// <summary>Garante que os diretórios de conteúdo customizado existam.</summary>
     public static void EnsureDirs()
     {
         DirAccess.MakeDirRecursiveAbsolute(ProjectSettings.GlobalizePath(PlayersDir));
         DirAccess.MakeDirRecursiveAbsolute(ProjectSettings.GlobalizePath(TeamsDir));
+        DirAccess.MakeDirRecursiveAbsolute(ProjectSettings.GlobalizePath(StadiumsDir));
     }
 
     // ── Jogadores ────────────────────────────────────────────────
@@ -59,6 +61,24 @@ public static class CustomContent
 
     public static void DeleteTeam(string id)
         => DeleteFile($"{TeamsDir}{id}.tres");
+
+    // ── Estádios ──────────────────────────────────────────────────
+
+    public static string SaveStadium(StadiumData data)
+    {
+        EnsureDirs();
+        string id = SanitizeId(data.StadiumId, data.Name, "estadio");
+        data.StadiumId = id;
+        string path = $"{StadiumsDir}{id}.tres";
+        ResourceSaver.Save(data, path);
+        return path;
+    }
+
+    public static List<StadiumData> LoadAllStadiums()
+        => LoadAll<StadiumData>(StadiumsDir);
+
+    public static void DeleteStadium(string id)
+        => DeleteFile($"{StadiumsDir}{id}.tres");
 
     // ── Internos ─────────────────────────────────────────────────
 
