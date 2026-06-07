@@ -9,16 +9,29 @@ namespace FootballGame;
 /// </summary>
 public partial class HumanInput : Node
 {
-    [Export] public int    ControllerIndex = 0;
-    [Export] public int    Team            = 0;
+    [Export] public int             ControllerIndex = 0;
+    [Export] public int             Team            = 0;
     [Export] public ControlSwitcher Switcher;
+
+    /// <summary>TeamController do time deste humano. Evita buscar jogadores na árvore.</summary>
+    [Export] private NodePath _teamControllerPath;
+
+    /// <summary>Câmera usada como referência para o movimento (relativa).</summary>
+    [Export] public Camera3D ReferenceCamera;
 
     public Player ActivePlayer        { get; private set; }
     public bool   RequestingTeamPress { get; private set; }
     public bool   RequestingGKRush    { get; private set; }
 
+    private TeamController _teamCtrl;
+
     // Prefixo de ações no Input Map: "p1_*", "p2_*", etc
     private string Prefix => $"p{ControllerIndex + 1}_";
+
+    public override void _Ready()
+    {
+        _teamCtrl = GetNodeOrNull<TeamController>(_teamControllerPath);
+    }
 
     public override void _PhysicsProcess(double delta)
     {
@@ -33,11 +46,10 @@ public partial class HumanInput : Node
             Prefix + "forward", Prefix + "back"
         );
 
-        var cam = GetViewport().GetCamera3D();
-        if (cam != null)
+        if (ReferenceCamera != null)
         {
-            var fwd = -cam.GlobalTransform.Basis.Z; fwd.Y = 0; fwd = fwd.Normalized();
-            var rgt =  cam.GlobalTransform.Basis.X; rgt.Y = 0; rgt = rgt.Normalized();
+            var fwd = -ReferenceCamera.GlobalTransform.Basis.Z; fwd.Y = 0; fwd = fwd.Normalized();
+            var rgt =  ReferenceCamera.GlobalTransform.Basis.X; rgt.Y = 0; rgt = rgt.Normalized();
             ActivePlayer.IntendedMovement = fwd * -inputDir.Y + rgt * inputDir.X;
         }
 
@@ -63,19 +75,17 @@ public partial class HumanInput : Node
 
     private Player FindNearestTeammateToBall()
     {
-        var ball = GetTree().GetFirstNodeInGroup("ball") as Node3D;
-        if (ball == null) return null;
+        if (_teamCtrl == null || _teamCtrl.Ball == null) return null;
+        var ballPos = _teamCtrl.Ball.GlobalPosition;
 
         Player best = null;
         float minDist = float.MaxValue;
 
-        foreach (var node in GetTree().GetNodesInGroup("players"))
+        // Itera lista cacheada — não toca na SceneTree
+        foreach (var p in _teamCtrl.Players)
         {
-            if (node is Player p && p.Team == Team)
-            {
-                float d = p.GlobalPosition.DistanceTo(ball.GlobalPosition);
-                if (d < minDist) { minDist = d; best = p; }
-            }
+            float d = p.GlobalPosition.DistanceSquaredTo(ballPos);
+            if (d < minDist) { minDist = d; best = p; }
         }
         return best;
     }

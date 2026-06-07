@@ -1,6 +1,5 @@
 using Godot;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace FootballGame;
 
@@ -14,45 +13,79 @@ public partial class TeamController : Node
     [Export] public int      Team          = 0;
     [Export] public Lineup   CurrentLineup;
     [Export] private NodePath _ballPath;
+    [Export] private NodePath _eventBusPath;
 
-    public TeamBlackboard Blackboard { get; private set; }
-    public List<Player>   Players    { get; private set; } = new();
+    public TeamBlackboard Blackboard      { get; private set; }
 
-    private Ball _ball;
-    private bool _playersLoaded = false;
+    /// <summary>Jogadores DESTE time. Populado uma vez no <see cref="_Ready"/>.</summary>
+    public List<Player> Players           { get; private set; } = new();
+
+    /// <summary>Jogadores do TIME ADVERSÁRIO. Populado uma vez (defer).</summary>
+    public List<Player> OpponentPlayers   { get; private set; } = new();
+
+    /// <summary>Todos os jogadores em campo. Usado por <see cref="FindBallCarrier"/>.</summary>
+    private readonly List<Player> _allPlayers = new();
+
+    public Ball Ball { get; private set; }
+
+    private MatchEventBus _bus;
 
     public override void _Ready()
     {
-        _ball = GetNode<Ball>(_ballPath);
+        Ball = GetNode<Ball>(_ballPath);
 
-        Blackboard = new TeamBlackboard { Ball = _ball };
+        Blackboard = new TeamBlackboard { Ball = Ball };
         AddChild(Blackboard);
 
-        // Defer player scan so MatchBootstrap can spawn players first
-        CallDeferred(nameof(FindAndApplyLineup));
+        // Escuta expulsões para remover o jogador do campo
+        _bus = GetNodeOrNull<MatchEventBus>(_eventBusPath);
+        if (_bus != null) _bus.EventOccurred += OnMatchEvent;
+
+        // Defer para garantir que TODOS os jogadores (inclusive do outro time)
+        // já estejam na árvore e no grupo "players".
+        CallDeferred(MethodName.CollectPlayers);
     }
 
-    private void FindAndApplyLineup()
+    private void OnMatchEvent(MatchEvent e)
     {
-        Players.Clear();
-        foreach (var node in GetTree().GetNodesInGroup("players"))
-            if (node is Player p && p.Team == Team)
-                Players.Add(p);
+        if (e.Type != MatchEventType.RedCard) return;
 
-        ApplyLineup();
-        _playersLoaded = true;
+        // Captura o nó antes de remover das listas; só o time DONO o libera.
+        if (e.Team == Team)
+        {
+            var player = Players.Find(p => p.PlayerId == e.MainPlayerId);
+            Players.RemoveAll(p => p.PlayerId == e.MainPlayerId);
+            _allPlayers.RemoveAll(p => p.PlayerId == e.MainPlayerId);
+            player?.QueueFree(); // QueueFree adia a liberação até o fim do frame
+        }
+        else
+        {
+            OpponentPlayers.RemoveAll(p => p.PlayerId == e.MainPlayerId);
+            _allPlayers.RemoveAll(p => p.PlayerId == e.MainPlayerId);
+        }
     }
 
-    /// <summary>Re-escaneia jogadores do time. Chamar após spawn dinâmico.</summary>
-    public void RefreshPlayers()
+    private void CollectPlayers()
     {
         Players.Clear();
+        OpponentPlayers.Clear();
+        _allPlayers.Clear();
+
         foreach (var node in GetTree().GetNodesInGroup("players"))
-            if (node is Player p && p.Team == Team)
-                Players.Add(p);
+        {
+            if (node is Player p)
+            {
+                _allPlayers.Add(p);
+                if (p.Team == Team) Players.Add(p);
+                else                OpponentPlayers.Add(p);
+            }
+        }
 
         ApplyLineup();
-        _playersLoaded = true;
+
+        // Expõe os elencos ao blackboard (referências — sempre atuais)
+        Blackboard.Teammates = Players;
+        Blackboard.Opponents = OpponentPlayers;
     }
 
     public override void _PhysicsProcess(double delta)
@@ -63,18 +96,28 @@ public partial class TeamController : Node
 
     private void UpdateBlackboard()
     {
-        Blackboard.BallPosition = _ball.GlobalPosition;
-        Blackboard.BallVelocity = _ball.LinearVelocity;
+        Blackboard.BallPosition = Ball.GlobalPosition;
+        Blackboard.BallVelocity = Ball.LinearVelocity;
         Blackboard.BallCarrier  = FindBallCarrier();
         Blackboard.TeamHasPossession =
             Blackboard.BallCarrier != null &&
             Blackboard.BallCarrier.Team == Team;
+
+        // Fase de jogo — orienta a movimentação sem bola
+        if (Blackboard.BallCarrier == null)
+            Blackboard.Phase = TeamPhase.Transition;
+        else if (Blackboard.BallCarrier.Team == Team)
+            Blackboard.Phase = TeamPhase.Attacking;
+        else
+            Blackboard.Phase = TeamPhase.Defending;
     }
 
     private Player FindBallCarrier()
     {
-        foreach (var p in GetTree().GetNodesInGroup("players").OfType<Player>())
-            if (p.GlobalPosition.DistanceTo(_ball.GlobalPosition) < 1.2f)
+        const float CarryRadiusSquared = 1.44f; // 1.2² = 1.44
+        // Itera lista cacheada — evita a busca na SceneTree a cada frame
+        foreach (var p in _allPlayers)
+            if (p.GlobalPosition.DistanceSquaredTo(Ball.GlobalPosition) < CarryRadiusSquared)
                 return p;
         return null;
     }

@@ -1,4 +1,5 @@
 using Godot;
+using System.Collections.Generic;
 
 namespace FootballGame;
 
@@ -27,11 +28,18 @@ public partial class AIBrain : Node
         if (Player == null)
             Player = GetParentOrNull<Player>();
 
+        // Wiring por cena: só resolve o TeamController se o caminho foi configurado.
+        // No spawn dinâmico (MatchBootstrap) o caminho fica vazio e o brain é
+        // inicializado via Initialize(tc) após o AddChild.
         if (_teamControllerPath != null && !_teamControllerPath.IsEmpty)
         {
             var teamCtrl = GetNode<TeamController>(_teamControllerPath);
             Initialize(teamCtrl);
         }
+
+        // Stagger: distribui os ticks de IA entre os jogadores ao longo do ciclo
+        // (evita que os 22 brains decidam no mesmo frame, suavizando spikes de CPU).
+        _tickAccumulator = (float)GD.RandRange(0.0, TickInterval);
     }
 
     /// <summary>Inicializa o brain com o TeamController do time. Chamado pelo MatchBootstrap.</summary>
@@ -66,10 +74,10 @@ public partial class AIBrain : Node
                 new BTCondition(b => b.Player.HasBall),
                 new BTAction(AttackOrPass)
             ),
-            // 2. Meu time tem a bola? Apoiar o ataque.
+            // 2. Time atacando (sem a bola comigo)? Movimentação ofensiva sem bola.
             new BTSequence(
-                new BTCondition(b => b.Blackboard.TeamHasPossession),
-                new BTAction(SupportAttack)
+                new BTCondition(b => b.Blackboard.Phase == TeamPhase.Attacking),
+                new BTAction(OffBallAttack)
             ),
             // 3. Ordem do humano: pressionar (botão LB).
             new BTSequence(
@@ -77,7 +85,12 @@ public partial class AIBrain : Node
                     b.Blackboard.PressureTarget != null && IsCloseToBall(8f)),
                 new BTAction(PressBallCarrier)
             ),
-            // 4. Default: ficar no slot da formação
+            // 4. Time defendendo? Recompõe / marca.
+            new BTSequence(
+                new BTCondition(b => b.Blackboard.Phase == TeamPhase.Defending),
+                new BTAction(DefensivePositioning)
+            ),
+            // 5. Default (transição / fallback): ficar no slot da formação
             new BTAction(HoldFormationSlot)
         );
     }
@@ -117,13 +130,99 @@ public partial class AIBrain : Node
         return BTStatus.Success;
     }
 
-    private BTStatus SupportAttack(AIBrain b, float dt)
+    // ── Movimentação ofensiva sem bola ───────────────────────────
+    private const int   OffBallSamples    = 9;
+    private const float OffBallSampleRing = 6f;   // raio do anel de amostragem (m)
+    private const float SprintDistSquared = 25f;  // >5m do alvo → sprinta
+
+    private BTStatus OffBallAttack(AIBrain b, float dt)
     {
-        var offset = new Vector3(0f, 0f, b.Player.Team == 0 ? -8f : 8f);
-        var supportPos = b.Blackboard.BallPosition + offset;
-        var dir = supportPos - b.Player.GlobalPosition;
-        b.Player.IntendedMovement = dir.LengthSquared() > 1f ? dir.Normalized() : Vector3.Zero;
+        var bb   = b.Blackboard;
+        var self = b.Player;
+        if (bb.Opponents == null || bb.Teammates == null)
+            return HoldFormationSlot(b, dt);
+
+        float attackingGoalX = self.Team == 0 ? 52.5f : -52.5f;
+        var   forward        = new Vector3(Mathf.Sign(attackingGoalX), 0f, 0f);
+
+        // Atacantes avançam mais; defensores quase não sobem
+        float aggressiveness = self.Role != null ? (1f - self.Role.DefensiveBias) : 0.5f;
+        float offsideLine    = SpaceEvaluator.OffsideLineX(self.Team, bb.Opponents);
+
+        Vector3 best      = b.SlotTarget;
+        float   bestScore = float.NegativeInfinity;
+
+        for (int i = 0; i < OffBallSamples; i++)
+        {
+            var cand = SampleCandidate(self.GlobalPosition, forward, aggressiveness, i);
+            float score = SpaceEvaluator.ScoreAttackingPosition(
+                cand, bb.BallPosition, attackingGoalX, offsideLine,
+                self.Team, bb.Opponents, bb.Teammates, self);
+
+            if (score > bestScore) { bestScore = score; best = cand; }
+        }
+
+        MoveToward(self, best);
         return BTStatus.Success;
+    }
+
+    /// <summary>Gera uma posição candidata: i==0 é a corrida reta em profundidade.</summary>
+    private Vector3 SampleCandidate(Vector3 origin, Vector3 forward, float aggressiveness, int i)
+    {
+        if (i == 0)
+            return origin + forward * (aggressiveness * 8f); // corrida em profundidade
+
+        float angle  = Mathf.Tau / (OffBallSamples - 1) * (i - 1);
+        var   offset = new Vector3(Mathf.Cos(angle), 0f, Mathf.Sin(angle)) * OffBallSampleRing;
+        return origin + offset + forward * (aggressiveness * 3f); // viés pra frente
+    }
+
+    // ── Posicionamento defensivo sem bola ────────────────────────
+    private BTStatus DefensivePositioning(AIBrain b, float dt)
+    {
+        var bb   = b.Blackboard;
+        var self = b.Player;
+        if (bb.Opponents == null)
+            return HoldFormationSlot(b, dt);
+
+        var mark = FindNearestOpponentInZone(self, bb.Opponents, 10f);
+        if (mark != null)
+        {
+            // Fica "goalside": entre o marcado e o próprio gol
+            float ownGoalX = self.Team == 0 ? -52.5f : 52.5f;
+            var   goal     = new Vector3(ownGoalX, 0f, 0f);
+            var   goalside = mark.GlobalPosition
+                           + (goal - mark.GlobalPosition).Normalized() * 1.5f;
+            MoveToward(self, goalside);
+        }
+        else
+        {
+            // Sem ninguém pra marcar: recompõe no slot (já comprimido pela bola)
+            MoveToward(self, b.SlotTarget);
+        }
+        return BTStatus.Success;
+    }
+
+    private Player FindNearestOpponentInZone(Player self, IReadOnlyList<Player> opponents, float radius)
+    {
+        Player best = null;
+        float minDist = radius * radius;
+        foreach (var o in opponents)
+        {
+            float d = o.GlobalPosition.DistanceSquaredTo(self.GlobalPosition);
+            if (d < minDist) { minDist = d; best = o; }
+        }
+        return best;
+    }
+
+    /// <summary>Define IntendedMovement em direção ao alvo, com sprint se estiver longe.</summary>
+    private void MoveToward(Player p, Vector3 target)
+    {
+        var dir = target - p.GlobalPosition;
+        dir.Y = 0f;
+        float distSq = dir.LengthSquared();
+        p.IntendedMovement = distSq > 1f ? dir.Normalized() : Vector3.Zero;
+        p.IntendsToSprint  = distSq > SprintDistSquared;
     }
 
     private BTStatus PressBallCarrier(AIBrain b, float dt)

@@ -49,7 +49,9 @@ FootballGame/
 
 - [`docs/architecture.md`](docs/architecture.md) — visão geral dos módulos e como conversam
 - [`docs/ai_design.md`](docs/ai_design.md) — decisões de IA, behavior tree e blackboard
+- [`docs/match_events.md`](docs/match_events.md) — sistema de eventos da partida (bus, faltas, cartões)
 - [`docs/leagues_design.md`](docs/leagues_design.md) — sistema de ligas e prestígio
+- [`docs/getting_started.md`](docs/getting_started.md) — passo a passo no editor do Godot
 - [`docs/futeboldocs1.md`](docs/futeboldocs1.md) — conversa fundadora (escopo inicial e decisões)
 
 ## Convenções
