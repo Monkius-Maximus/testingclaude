@@ -20,6 +20,9 @@ public partial class ControlSwitcher : Node
     private readonly List<HumanInput> _humans = new();
     private readonly Dictionary<Player, ControlMode> _modes = new();
 
+    /// <summary>Buffer reutilizado por <see cref="GetNearbyTeammates"/> — evita aloc por frame.</summary>
+    private readonly List<Player> _nearbyBuffer = new();
+
     private TeamController _teamA;
     private TeamController _teamB;
 
@@ -31,6 +34,12 @@ public partial class ControlSwitcher : Node
         _teamA = GetNodeOrNull<TeamController>(_teamAPath);
         _teamB = GetNodeOrNull<TeamController>(_teamBPath);
 
+        // Defer: TeamControllers ainda estão coletando jogadores nesta hora
+        CallDeferred(MethodName.RegisterAllPlayers);
+    }
+
+    private void RegisterAllPlayers()
+    {
         foreach (var node in GetTree().GetNodesInGroup("players"))
             if (node is Player p) _modes[p] = ControlMode.AI;
     }
@@ -98,31 +107,37 @@ public partial class ControlSwitcher : Node
         return false;
     }
 
+    /// <summary>
+    /// Companheiros de <paramref name="p"/> num raio. Retorna um buffer COMPARTILHADO —
+    /// não armazene a referência, apenas itere imediatamente.
+    /// </summary>
     private List<Player> GetNearbyTeammates(Player p, float radius)
     {
-        var result = new List<Player>();
-        foreach (var node in GetTree().GetNodesInGroup("players"))
+        _nearbyBuffer.Clear();
+        var tc = p.Team == 0 ? _teamA : _teamB;
+        if (tc == null) return _nearbyBuffer;
+
+        float r2 = radius * radius;
+        foreach (var m in tc.Players)
         {
-            if (node is Player m && m != p && m.Team == p.Team)
-            {
-                if (m.GlobalPosition.DistanceTo(p.GlobalPosition) < radius)
-                    result.Add(m);
-            }
+            if (m == p) continue;
+            if (m.GlobalPosition.DistanceSquaredTo(p.GlobalPosition) < r2)
+                _nearbyBuffer.Add(m);
         }
-        return result;
+        return _nearbyBuffer;
     }
 
     private Player FindNearestOpponent(Player p)
     {
+        var tc = p.Team == 0 ? _teamA : _teamB;
+        if (tc == null) return null;
+
         Player best = null;
         float minDist = float.MaxValue;
-        foreach (var node in GetTree().GetNodesInGroup("players"))
+        foreach (var o in tc.OpponentPlayers)
         {
-            if (node is Player o && o.Team != p.Team)
-            {
-                float d = o.GlobalPosition.DistanceTo(p.GlobalPosition);
-                if (d < minDist) { minDist = d; best = o; }
-            }
+            float d = o.GlobalPosition.DistanceSquaredTo(p.GlobalPosition);
+            if (d < minDist) { minDist = d; best = o; }
         }
         return best;
     }

@@ -144,7 +144,8 @@ public partial class CinematicDirector : Node
 
     private async Task Phase_ReturnToGame(int team, Vector3 ballPos)
     {
-        _hud?.AnimateGoalScored(team);
+        // O HUD reage ao gol via MatchEventBus (publicado por RulesManager.OnGoalScored).
+        // Aqui só cuidamos da câmera e do reset.
 
         var tw = CreateTween();
         tw.TweenProperty(_cinematicCam, "fov", 75f, CameraReturnTime);

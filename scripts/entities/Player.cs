@@ -27,6 +27,10 @@ public partial class Player : CharacterBody3D
     public float CurrentStamina { get; private set; } = 100f;
     public bool  HasBall        { get; set; }         = false;
 
+    // ── Sinais ────────────────────────────────────────────────────
+    /// <summary>Emitido ao executar um desarme. O <see cref="FoulSystem"/> escuta para resolver faltas.</summary>
+    [Signal] public delegate void TackleAttemptedEventHandler(Player tackler);
+
     // ── Intenções (preenchidas por Brain OU HumanInput) ──────────
     public Vector3 IntendedMovement  { get; set; } = Vector3.Zero;
     public bool    IntendsToSprint   { get; set; } = false;
@@ -100,7 +104,12 @@ public partial class Player : CharacterBody3D
     public virtual bool CanHandleBallWithHands(Vector3 ballPosition) => false;
 
     protected virtual void PerformKick()   => Animator?.PlayKick(IntendedKickPower);
-    protected virtual void PerformTackle() => Animator?.PlaySlideTackle();
+
+    protected virtual void PerformTackle()
+    {
+        Animator?.PlaySlideTackle();
+        EmitSignal(SignalName.TackleAttempted, this);
+    }
 
     private void ApplyGravity(float delta)
     {

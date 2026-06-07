@@ -91,6 +91,8 @@ A cena raiz da partida. Estrutura sugerida:
 Match (Node3D)
 ├── Field (instanced)
 ├── Ball (instanced)
+├── MatchEventBus (Node + MatchEventBus.cs)   ← hub de eventos
+├── MatchClock (Node + MatchClock.cs)
 ├── TeamA (Node + TeamController.cs, Team=0)
 │   ├── Goalkeeper (instanced)
 │   └── Player × 10 (instanced, posicionados na formação inicial)
@@ -100,6 +102,7 @@ Match (Node3D)
 ├── GameplayCamera (Camera3D + CameraController.cs)
 ├── CinematicCamera (Camera3D + CinematicCamera.cs, Current=false)
 ├── RulesManager (Node + RulesManager.cs)
+├── FoulSystem (Node + FoulSystem.cs)          ← detecção de faltas/cartões
 ├── ControlSwitcher (Node + ControlSwitcher.cs)
 ├── HumanInput_P1 (Node + HumanInput.cs, ControllerIndex=0)
 ├── CinematicDirector (Node + CinematicDirector.cs)
@@ -107,7 +110,15 @@ Match (Node3D)
 ```
 
 Configure todos os `NodePath` exportados de cada script para apontarem
-para os nós corretos.
+para os nós corretos. Atenção aos NodePaths do **sistema de eventos**:
+
+| Nó | Propriedade | Aponta para |
+|---|---|---|
+| `TeamA` / `TeamB` | `Event Bus Path` | `../MatchEventBus` |
+| `RulesManager` | `Event Bus Path`, `Match Clock Path` | `../MatchEventBus`, `../MatchClock` |
+| `FoulSystem` | `Bus Path`, `Match Clock Path`, `Team A Path`, `Team B Path` | respectivos nós |
+| `HUD` | `Event Bus Path` | o `MatchEventBus` |
+| `HumanInput_P1` | `Team Controller Path`, `Reference Camera` | `../TeamA`, `../GameplayCamera` |
 
 ## 8. Criar os PlayerRoles em `resources/roles/`
 

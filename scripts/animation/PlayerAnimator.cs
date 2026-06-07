@@ -16,16 +16,28 @@ public partial class PlayerAnimator : Node
     private AnimationNodeStateMachinePlayback _stateMachine;
     private Player                            _player;
 
+    // ── StringName cacheados (zero alocação por frame) ───────────
     // Caminhos dentro do AnimationTree — devem bater com a config no editor
-    private const string ParamBlendPos  = "parameters/Locomotion/blend_position";
-    private const string ParamKickSpeed = "parameters/Kick/TimeScale/scale";
+    private static readonly StringName ParamBlendPos  = "parameters/Locomotion/blend_position";
+    private static readonly StringName ParamKickSpeed = "parameters/Kick/TimeScale/scale";
+
+    // Nomes dos estados — passados ao StateMachine.Travel()
+    private static readonly StringName StateIdle        = "Idle";
+    private static readonly StringName StateLocomotion  = "Locomotion";
+    private static readonly StringName StateSprint      = "Sprint";
+    private static readonly StringName StateKick        = "Kick";
+    private static readonly StringName StateSlideTackle = "SlideTackle";
+    private static readonly StringName StateHeader      = "Header";
+    private static readonly StringName StateStumble     = "Stumble";
+    private static readonly StringName StateCelebrate   = "Celebrate";
+    private static readonly StringName StateDive        = "Dive";
 
     private const float WalkThreshold   = 0.1f;
     private const float SprintThreshold = 0.85f;
 
-    private string  _currentState  = "Idle";
-    private Vector2 _blendVelocity = Vector2.Zero;
-    private bool    _actionPending = false;
+    private StringName _currentState  = StateIdle;
+    private Vector2    _blendVelocity = Vector2.Zero;
+    private bool       _actionPending = false;
 
     public override void _Ready()
     {
@@ -47,18 +59,18 @@ public partial class PlayerAnimator : Node
 
         if (speed < WalkThreshold)
         {
-            TryTransition("Idle");
+            TryTransition(StateIdle);
             SmoothBlend(Vector2.Zero, delta);
             return;
         }
 
         if (speed >= SprintThreshold)
         {
-            TryTransition("Sprint");
+            TryTransition(StateSprint);
         }
         else
         {
-            TryTransition("Locomotion");
+            TryTransition(StateLocomotion);
             var target = new Vector2(StrafeInput(), speed);
             SmoothBlend(target, delta);
         }
@@ -92,23 +104,23 @@ public partial class PlayerAnimator : Node
     public void PlayKick(float forceMultiplier = 1f)
     {
         _animTree.Set(ParamKickSpeed, 0.8f + forceMultiplier * 0.4f);
-        StartAction("Kick");
+        StartAction(StateKick);
     }
 
-    public void PlaySlideTackle() => StartAction("SlideTackle");
-    public void PlayHeader()      => StartAction("Header");
-    public void PlayStumble()     => StartAction("Stumble");
-    public void PlayCelebrate()   => StartAction("Celebrate");
-    public void PlayDive()        => StartAction("Dive");
+    public void PlaySlideTackle() => StartAction(StateSlideTackle);
+    public void PlayHeader()      => StartAction(StateHeader);
+    public void PlayStumble()     => StartAction(StateStumble);
+    public void PlayCelebrate()   => StartAction(StateCelebrate);
+    public void PlayDive()        => StartAction(StateDive);
 
-    private void TryTransition(string state)
+    private void TryTransition(StringName state)
     {
         if (_currentState == state) return;
         _stateMachine.Travel(state);
         _currentState = state;
     }
 
-    private void StartAction(string state)
+    private void StartAction(StringName state)
     {
         _actionPending = true;
         _stateMachine.Travel(state);
@@ -121,6 +133,6 @@ public partial class PlayerAnimator : Node
     public void OnActionFinished()
     {
         _actionPending = false;
-        TryTransition("Idle");
+        TryTransition(StateIdle);
     }
 }

@@ -3,6 +3,14 @@ using System.Collections.Generic;
 
 namespace FootballGame;
 
+/// <summary>Fase de jogo do time, que orienta a movimentação sem bola.</summary>
+public enum TeamPhase
+{
+    Attacking,  // este time tem a posse
+    Defending,  // o adversário tem a posse
+    Transition  // bola solta (ninguém domina)
+}
+
 /// <summary>
 /// "Quadro-negro" do time: dados consultados pelos jogadores via <see cref="AIBrain"/>.
 /// Atualizado uma vez por frame pelo <see cref="TeamController"/>. Sem lógica aqui —
@@ -16,6 +24,11 @@ public partial class TeamBlackboard : Node
     public Vector3 BallVelocity;
     public Player  BallCarrier;
     public bool    TeamHasPossession;
+    public TeamPhase Phase = TeamPhase.Transition;
+
+    // ── Elencos (referências às listas do TeamController; sempre atuais) ──
+    public IReadOnlyList<Player> Teammates;
+    public IReadOnlyList<Player> Opponents;
 
     // ── Formação em tempo real ────────────────────────────────────
     public Dictionary<string, Vector3> FormationSlots = new();

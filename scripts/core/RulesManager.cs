@@ -10,13 +10,17 @@ namespace FootballGame;
 public partial class RulesManager : Node
 {
     [Export] private NodePath _ballPath;
+    [Export] private NodePath _eventBusPath;
+    [Export] private NodePath _matchClockPath;
 
     [Signal] public delegate void CornerKickEventHandler(int team, string corner);
     [Signal] public delegate void GoalKickEventHandler(int team);
     [Signal] public delegate void ThrowInEventHandler(int team, Vector3 position);
     [Signal] public delegate void GoalEventHandler(int team);
 
-    private Ball _ball;
+    private Ball          _ball;
+    private MatchEventBus _bus;
+    private MatchClock    _clock;
     private readonly int[] _score = { 0, 0 };
 
     // Posições de reposição (em metros). Ajustar ao campo real.
@@ -30,13 +34,30 @@ public partial class RulesManager : Node
 
     private static readonly Vector3 KickoffPosition = new(0f, 0.5f, 0f);
 
+    // Dimensões da grande área (metros, devem casar com o Field)
+    private const float PenaltyAreaDepth   = 16.5f;
+    private const float PenaltyAreaHalfZ   = 20.16f;
+    private const float FieldHalfLength    = 52.5f;
+
     public override void _Ready()
     {
-        _ball = GetNode<Ball>(_ballPath);
+        _ball  = GetNode<Ball>(_ballPath);
+        _clock = GetNodeOrNull<MatchClock>(_matchClockPath);
+
         _ball.BallOutLeft   += (last) => OnBallOutLateral(last, "left");
         _ball.BallOutRight  += (last) => OnBallOutLateral(last, "right");
         _ball.BallOutTop    += (last) => OnBallOutEndline(last, "top");
         _ball.BallOutBottom += (last) => OnBallOutEndline(last, "bottom");
+
+        // Escuta faltas para montar o tiro livre / pênalti
+        _bus = GetNodeOrNull<MatchEventBus>(_eventBusPath);
+        if (_bus != null) _bus.EventOccurred += OnMatchEvent;
+    }
+
+    private void OnMatchEvent(MatchEvent e)
+    {
+        if (e.Type == MatchEventType.Foul)
+            SetupRestartFromFoul(e);
     }
 
     // ── Saída pela lateral → Arremesso lateral ───────────────────
@@ -96,8 +117,48 @@ public partial class RulesManager : Node
     {
         _score[team]++;
         EmitSignal(SignalName.Goal, team);
+
+        // Publica no bus para HUD, estatísticas, comentário, etc.
+        int minute = _clock?.CurrentMinute ?? 0;
+        _bus?.Publish(MatchEvent.Goal(minute, team, "", "", KickoffPosition));
+
         GD.Print($"GOL! Placar: {_score[0]} x {_score[1]}");
         await ToSignal(GetTree().CreateTimer(0.5f), SceneTreeTimer.SignalName.Timeout);
         _ball.ResetBall(KickoffPosition);
+    }
+
+    // ── Falta → tiro livre ou pênalti ────────────────────────────
+    private async void SetupRestartFromFoul(MatchEvent foul)
+    {
+        var pos        = foul.Position;
+        int fouledTeam = foul.Team == 0 ? 1 : 0; // quem sofreu a falta cobra
+        int minute     = foul.Minute;
+
+        bool isPenalty = IsInDefensivePenaltyArea(pos, defendingTeam: foul.Team);
+
+        if (isPenalty)
+        {
+            // Marca da cal do time que cometeu a falta
+            pos = new Vector3(foul.Team == 0 ? -41f : 41f, 0.5f, 0f);
+            _bus?.Publish(MatchEvent.Simple(MatchEventType.Penalty, minute, fouledTeam));
+        }
+        else
+        {
+            pos.Y = 0.5f;
+            _bus?.Publish(MatchEvent.Simple(MatchEventType.FreeKick, minute, fouledTeam));
+        }
+
+        await ToSignal(GetTree().CreateTimer(1.5f), SceneTreeTimer.SignalName.Timeout);
+        _ball.ResetBall(pos);
+    }
+
+    /// <summary>Verdadeiro se <paramref name="pos"/> está na grande área do time que defende.</summary>
+    private bool IsInDefensivePenaltyArea(Vector3 pos, int defendingTeam)
+    {
+        float ownGoalX = defendingTeam == 0 ? -FieldHalfLength : FieldHalfLength;
+        bool nearOwnLine = defendingTeam == 0
+            ? pos.X <= ownGoalX + PenaltyAreaDepth
+            : pos.X >= ownGoalX - PenaltyAreaDepth;
+        return nearOwnLine && Mathf.Abs(pos.Z) < PenaltyAreaHalfZ;
     }
 }

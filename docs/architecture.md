@@ -12,6 +12,8 @@ controle humano, e vice-versa.
 ```
 Match (cena raiz)
 ├── Ball                 (RigidBody3D — física)
+├── MatchEventBus        (hub de eventos da partida)
+├── MatchClock           (relógio do jogo)
 ├── Field                (campo + áreas + colisores)
 │   ├── GoalDetectorL    (Area3D)
 │   └── GoalDetectorR    (Area3D)
@@ -27,6 +29,7 @@ Match (cena raiz)
 ├── ControlSwitcher      (decide quem manda em cada jogador)
 ├── HumanInput × N       (1+ controles de humano)
 ├── RulesManager         (regras do futebol)
+├── FoulSystem           (detecção de faltas e cartões)
 ├── CinematicDirector    (gol em câmera lenta)
 └── HUD                  (placar)
 ```
@@ -133,3 +136,30 @@ muito (>50 arquivos), considerar subnamespaces por pacote.
 - Multiplayer online — `MultiplayerSynchronizer` nas intenções dos jogadores
   e `AIBrain` rodando authoritative no servidor.
 - Simulação de partidas em background (para modo carreira).
+
+## Performance baseline
+
+Decisões de otimização aplicadas desde o esqueleto inicial (todas com
+custo zero — são mudanças cirúrgicas, não adicionam complexidade):
+
+| Otimização | Onde | Por quê |
+|---|---|---|
+| `StringName` para parâmetros do AnimationTree | `PlayerAnimator` | Strings literais em `Set()`/`Travel()` alocam em todo frame. `StringName` é imutável e cacheado. |
+| Lista cacheada de jogadores | `TeamController.Players`, `OpponentPlayers`, `_allPlayers` | `GetNodesInGroup` varre toda a SceneTree. Caro com 22 agentes × 60 fps. |
+| `DistanceSquaredTo` em vez de `DistanceTo` | `ControlSwitcher`, `TeamController`, `HumanInput` | Evita `sqrt()` quando só queremos comparar distâncias. |
+| Stagger no tick da IA | `AIBrain._Ready` | 22 brains decidindo no mesmo frame causaria spike. Espalhar pelo ciclo de 100ms suaviza o frame time. |
+| Tick de IA a 10 Hz | `AIBrain` | Decisões de futebol não precisam de 60 Hz. Reduz 83% do custo. |
+| Buffer reutilizável | `ControlSwitcher._nearbyBuffer` | Evita alocar `List<Player>` a cada frame em queries vizinhas. |
+| Câmera de referência cacheada | `HumanInput.ReferenceCamera` | `GetViewport().GetCamera3D()` faz lookup na árvore. |
+| `CallDeferred` na coleta inicial | `TeamController.CollectPlayers` | Garante que todos os jogadores (ambos os times) estão na árvore antes de cachear. |
+
+**Otimizações reservadas para depois** (não fazer ainda — esperar profiler apontar):
+
+- LOD de modelos e animação (jogadores distantes)
+- Object pooling de partículas e efeitos
+- Tick adaptativo de IA (mais rápido perto da bola)
+- Decisões em cascata (estratégica > tática > mecânica com TTLs diferentes)
+- Crowd no estádio via `MultiMeshInstance3D`
+
+A regra geral: **profile primeiro, otimize depois**. Veja `docs/getting_started.md`
+para os primeiros passos com o Profiler do Godot.
